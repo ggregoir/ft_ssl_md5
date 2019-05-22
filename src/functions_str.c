@@ -6,11 +6,55 @@
 /*   By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/08 13:01:45 by ggregoir          #+#    #+#             */
-/*   Updated: 2019/05/15 15:01:52 by ggregoir         ###   ########.fr       */
+/*   Updated: 2019/05/22 17:39:23 by ggregoir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ssl.h"
+
+static int		argv_len(char **argv, int argc)
+{
+	int i;
+	int count;
+
+	i = 0;
+	count = 1;
+	while (count != argc)
+	{
+		i += ft_strlen(argv[count]);
+		count++;
+	}
+	return (i);
+}
+
+char	*argv_to_str(char **argv, int argc)
+{
+	int i;
+	int count;
+	char *ret;
+	int x;
+	
+	i = argv_len(argv, argc);
+	ret = ft_strnew(i + argc);
+	count = 1;
+	i = 0;
+	x = 0;
+	while (count != argc)
+	{
+		while (argv[count][x] != '\0')
+		{
+			ret[i] = argv[count][x];
+			x++;
+			i++;
+		}
+		count++;
+		ret[i] = ' ';
+		i++;
+		x = 0;
+	}
+	ret[i] = '\0';
+	return(ret);
+}
 
 int				match_str(char *str, char *to_match)
 {
@@ -63,10 +107,4 @@ char			*ft_strjoin_and_free(char *s1, char *s2, char c, int at)
 	if (at == 2 || at == 3)
 		ft_strdel(&s2);
 	return (ret);
-}
-
-
-void		print_usage()
-{
-	ft_putendl("usage: ft_ssl command [command opts] [command args]");
 }

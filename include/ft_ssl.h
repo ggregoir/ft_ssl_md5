@@ -6,7 +6,7 @@
 /*   By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/08 12:34:59 by ggregoir          #+#    #+#             */
-/*   Updated: 2019/05/21 13:38:23 by ggregoir         ###   ########.fr       */
+/*   Updated: 2019/05/22 17:40:10 by ggregoir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,8 @@ typedef struct	s_flags
 	uint8_t	silent;
 	uint8_t	md5;
 	uint8_t	sha256;
-
-	char	*filename;
+	uint8_t	noflags;
+	char	filename[255];
 	char	*content;
 	
 }				t_flags;
@@ -53,5 +53,8 @@ int		match_str(char *str, char *to_match);
 char	*ft_strjoin_and_free(char *s1, char *s2, char c, int at);
 int		get_next_line(const int fd, char **line);
 void	print_usage();
+void	print_usage_ssl();
+void	ft_ssl_error(char *command);
+char	*argv_to_str(char **argv, int argc);
 
 #endif
