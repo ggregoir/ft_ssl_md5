@@ -6,26 +6,60 @@
 /*   By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/08 12:31:33 by ggregoir          #+#    #+#             */
-/*   Updated: 2019/05/22 17:41:43 by ggregoir         ###   ########.fr       */
+/*   Updated: 2019/05/28 17:51:45 by ggregoir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ssl.h"
 
+void printlst(t_list *elem)
+{
+	ft_putstr("list elem: ");
+	ft_putendl(elem->data);
+}
 
 int	handle_filename(char *command, t_flags *flags)
 {
-	ft_putstr("filename: ");
-	ft_putendl(command);
+	ft_putstr("filename len: ");
+	ft_putnbr(ft_strlen(command));
+	ft_putendl("");
+	ft_lst_add_back(&flags->filename, ft_lstnew(command, ft_strlen(command) + 1));
+	return(1);
 }
 
 int	handle_flags(char *command, t_flags *flags)
 {
-	if (ft_strequ(command, "md5"))
+	int i;
+
+	i = 1;
+	if (ft_strequ(command, "--"))
 	{
 		flags->noflags = 1;
 		return(1);
 	}
+	else
+	{
+		while(command[i] != '\0')
+		{
+			if (command[i] != 'p' && command[i] != 'q' && command[i] != 'r' &&
+				command[i] != 's')
+			{
+				illegal_option(command[i]);
+				return(0);
+			}
+			if (command[i] == 'p')
+				flags->prompt = 1;
+			if (command[i] == 'q')
+				flags->quiet = 1;
+			if (command[i] == 'r')
+				flags->reverse = 1;
+			if (command[i] == 's')
+				flags->string = 1;
+			i++;
+		}
+		return(1);
+	}
+	
 }
 
 int	get_command(char *command, t_flags *flags)
@@ -44,12 +78,13 @@ int	get_command(char *command, t_flags *flags)
 			flags->sha256 = 1;
 	else
 	{
-		if (!flags->noflags)
+		if (!flags->noflags && command[0] == '-')
 		{
-			if(command[0] == '-')
-				handle_flags(command, flags);
+			if (!handle_flags(command, flags))
+				return(0);
 		}
-		handle_filename(command, flags);
+		else
+			handle_filename(command, flags);
 
 	}
 	return(1);
@@ -100,7 +135,8 @@ int	parse_ssl_line(t_flags *flags, char *line)
 		return(0);
 	//eval[current - 1](flags);
 	ft_putendl("supposed to do a function");
-	printf("md5: %d, sha: %d\n", flags->md5, flags->sha256);
+	printf("md5: %d, sha: %d p: %d q: %d r: %d s:%d\n", flags->md5, flags->sha256, flags->prompt, flags->quiet, flags->reverse, flags->string);
+	ft_lstiter(flags->filename, printlst);
 	free(line);
 	return(1);
 }
@@ -132,7 +168,7 @@ void read_prompt_first(t_flags *flags)
 
 int main(int argc, char **argv)
 {
-	t_flags flags = {0, 0, 0, 0, 0, "", 0};
+	t_flags flags = {0, 0, 0, 0, 0, 0, 0, 0, 0};
 	// ft_putstr("argc: ");
 	// ft_putnbr(argc);
 	// ft_putendl("");
