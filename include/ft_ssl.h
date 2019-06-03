@@ -6,7 +6,7 @@
 /*   By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/08 12:34:59 by ggregoir          #+#    #+#             */
-/*   Updated: 2019/05/28 17:51:27 by ggregoir         ###   ########.fr       */
+/*   Updated: 2019/05/31 18:47:26 by ggregoir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,9 @@
 # define NPUZZLE_H
 
 # include "../libft/includes/libft.h"
-# include <unistd.h>
-# include <string.h>
+
+//delete me 
 # include <stdio.h>
-# include <stdint.h>
-# include <stdlib.h>
-# include <sys/stat.h>
-# include <ctype.h>
 
 # define MAX_FILE_SIZE 209715200
 
@@ -59,5 +55,6 @@ void	print_usage_ssl();
 void	ft_ssl_error(char *command);
 void	illegal_option(char c);
 char	*argv_to_str(char **argv, int argc);
+char	*get_file(char *filename);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/08 12:31:33 by ggregoir          #+#    #+#             */
-/*   Updated: 2019/05/28 17:51:45 by ggregoir         ###   ########.fr       */
+/*   Updated: 2019/05/31 19:03:52 by ggregoir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,6 +172,10 @@ int main(int argc, char **argv)
 	// ft_putstr("argc: ");
 	// ft_putnbr(argc);
 	// ft_putendl("");
+	char *str;
+	str = get_file("test");
+	printf("%s\n", str);
+	ft_strdel(&str);
 	if (argc <= 1)
 	{
 		read_prompt_first(&flags);
