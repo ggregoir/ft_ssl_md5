@@ -1,20 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_memset.c                                        :+:      :+:    :+:   */
+/*   md5.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/05/24 14:50:33 by ggregoir          #+#    #+#             */
-/*   Updated: 2019/06/04 23:00:34 by ggregoir         ###   ########.fr       */
+/*   Created: 2019/06/04 20:25:01 by ggregoir          #+#    #+#             */
+/*   Updated: 2019/06/05 00:11:28 by ggregoir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "ft_ssl.h"
 
-void	*ft_memset(void *s, int c, size_t n)
+
+char *prompt_md5(int8_t *flags)
 {
-	while (n--)
-		((t_byte *)s)[n] = (t_byte)c;
-	return (s);
+	return(md5(read_fd(0), flags));
+}
+
+char *md5(char *str, int8_t *flags)
+{
+	flags['t'] = -1;
+	return(str);
 }

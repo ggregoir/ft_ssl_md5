@@ -6,7 +6,7 @@
 /*   By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/10 17:55:58 by ggregoir          #+#    #+#             */
-/*   Updated: 2019/05/28 17:37:01 by ggregoir         ###   ########.fr       */
+/*   Updated: 2019/06/04 22:50:15 by ggregoir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,10 @@ void		illegal_option(char c)
 	exit(1);
 }
 
-void ft_ssl_error(char *command)
+int ft_ssl_error(char *command)
 {
 	ft_putstr("ft_ssl: Error: '");
 	ft_putstr(command);
 	ft_putendl("' is an invalid command.\n");
+	return(0);
 }

@@ -6,7 +6,7 @@
 /*   By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/08 12:34:59 by ggregoir          #+#    #+#             */
-/*   Updated: 2019/05/31 18:47:26 by ggregoir         ###   ########.fr       */
+/*   Updated: 2019/06/05 00:09:29 by ggregoir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,20 +23,13 @@
 # define TRUE 1
 # define FALSE 0
 
-typedef struct	s_flags
+typedef struct	s_hash
 {
-	uint8_t	reverse;
-	uint8_t	quiet;
-	uint8_t	string;
-	uint8_t	prompt;
 	uint8_t	md5;
 	uint8_t	sha256;
-	uint8_t	noflags;
 	t_list	*filename;
 	char	*content;
-	
-}				t_flags;
-
+}				t_hash;
 
 typedef struct	s_line
 {
@@ -52,9 +45,12 @@ char	*ft_strjoin_and_free(char *s1, char *s2, char c, int at);
 int		get_next_line(const int fd, char **line);
 void	print_usage();
 void	print_usage_ssl();
-void	ft_ssl_error(char *command);
+int		ft_ssl_error(char *command);
 void	illegal_option(char c);
 char	*argv_to_str(char **argv, int argc);
 char	*get_file(char *filename);
+char 	*read_fd(int fd);
+char 	*prompt_md5(int8_t *flags);
+char 	*md5(char *str, int8_t *flags);
 
 #endif
