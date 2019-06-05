@@ -6,7 +6,7 @@
 /*   By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/08 12:34:59 by ggregoir          #+#    #+#             */
-/*   Updated: 2019/06/05 00:09:29 by ggregoir         ###   ########.fr       */
+/*   Updated: 2019/06/05 22:41:59 by ggregoir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ typedef struct	s_hash
 {
 	uint8_t	md5;
 	uint8_t	sha256;
-	t_list	*filename;
+	t_list	*queue;
 	char	*content;
 }				t_hash;
 
