@@ -6,7 +6,7 @@
 /*   By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/08 12:34:59 by ggregoir          #+#    #+#             */
-/*   Updated: 2019/06/05 22:41:59 by ggregoir         ###   ########.fr       */
+/*   Updated: 2019/06/06 20:41:00 by ggregoir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,9 @@ void	illegal_option(char c);
 char	*argv_to_str(char **argv, int argc);
 char	*get_file(char *filename);
 char 	*read_fd(int fd);
-char 	*prompt_md5(int8_t *flags);
-char 	*md5(char *str, int8_t *flags);
+void 	md5(t_hash *hash, int8_t *flags);
+void 	sha256(t_hash *hash, int8_t *flags);
+void 	prompt_md5(t_hash *hash, int8_t *flags);
+void 	prompt_sha256(t_hash *hash, int8_t *flags);
 
 #endif

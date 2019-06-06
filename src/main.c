@@ -6,7 +6,7 @@
 /*   By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/08 12:31:33 by ggregoir          #+#    #+#             */
-/*   Updated: 2019/06/05 23:12:57 by ggregoir         ###   ########.fr       */
+/*   Updated: 2019/06/07 01:29:28 by ggregoir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ int	handle_string(char *cmd, t_hash *hash)
 	int i;
 	int y;
 	char new[255];
+
 	y = 0;
 	i = 1;
 	new[0] = -1;
@@ -45,7 +46,8 @@ int	handle_string(char *cmd, t_hash *hash)
 	ft_putstr("string len: ");
 	ft_putnbr(ft_strlen(new));
 	ft_putendl("");
-	ft_lst_add_back(&hash->queue, ft_lstnew(new, ft_strlen(new) + 1));
+	if(cmd)
+		ft_lst_add_back(&hash->queue, ft_lstnew(new, ft_strlen(new) + 1));
 	return(1);
 }
 
@@ -103,7 +105,10 @@ int	get_command(char *command, int8_t *flags, t_hash *hash)
 				return(0);
 		}
 		else
+		{
+			flags['-'] = 1;
 			handle_filename(command, hash);
+		}
 
 	}
 	return(1);
@@ -113,7 +118,8 @@ int args_numbers(t_hash *hash)
 {
 	if (hash->md5)
 	{
-		if(!hash->queue->data)
+		printf("starf\n");
+		if(hash->queue->data && hash->queue->next->data == NULL)
 			return(1);
 		else
 			return(2);
@@ -147,19 +153,18 @@ int get_args(int8_t *flags, t_hash *hash, char *line)
 			return(0);
 		j = 0;
 	}
+	printf("cc\n");
 	return (args_numbers(hash));
 }
 
 int	parse_ssl_line(int8_t *flags, t_hash *hash, char *line)
 {
 	uint8_t current;
-	static void	(*eval[4])() = {prompt_md5, hash_md5, prompt_256, hash_256};
+	static void	(*eval[4])(t_hash *, int8_t *) = {prompt_md5, md5, prompt_sha256, sha256};
 	if (!(current = get_args(flags, hash, line)))
 		return(0);
-	eval[current - 1](flags));
-	ft_putendl("supposed to do a function");
-	printf("md5: %d, sha: %d p: %d q: %d r: %d s:%d\n", hash->md5, hash->sha256, flags['p'], flags['q'], flags['r'], flags['s']);
-	ft_lstiter(hash->queue, printlst);
+	printf("md5: %d, sha: %d p: %d q: %d r: %d s:%d -:%d\n", hash->md5, hash->sha256, flags['p'], flags['q'], flags['r'], flags['s'], flags['-']);
+	eval[current - 1](hash, flags);
 	free(line);
 	return(1);
 }
