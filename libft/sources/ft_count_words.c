@@ -6,11 +6,30 @@
 /*   By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/24 14:41:44 by ggregoir          #+#    #+#             */
-/*   Updated: 2017/08/01 00:12:26 by ggregoir         ###   ########.fr       */
+/*   Updated: 2019/06/10 19:19:36 by ggregoir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+
+int		count_words_spaces(const char *str)
+{
+	int i;
+
+	i = 0;
+	while (*str != '\0')
+	{
+		while (*str == ' ' || *str == '\t')
+			str++;
+		if (*str != ' ' && *str != '\t' && *str != '\0')
+		{
+			while (*str != ' ' && *str != '\t' && *str != '\0')
+				str++;
+			i++;
+		}
+	}
+	return (i);
+}
 
 int		ft_count_words(const char *str, char c)
 {

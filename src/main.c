@@ -6,51 +6,69 @@
 /*   By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/08 12:31:33 by ggregoir          #+#    #+#             */
-/*   Updated: 2019/06/07 01:29:28 by ggregoir         ###   ########.fr       */
+/*   Updated: 2019/06/11 01:59:37 by ggregoir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ssl.h"
 
-void printlst(t_list *elem)
+size_t		tablen(char **tab)
 {
-	ft_putstr("list elem: ");
-	ft_putendl(elem->data);
+	size_t	i;
+	size_t	count;
+
+	count = 0;
+	i = 0;
+	while (tab[i])
+		count += ft_strlen(tab[i++]);
+	return (count);
 }
 
-int	handle_filename(char *cmd, t_hash *hash)
+size_t		tabsize(char **tab)
 {
-	ft_putstr("filename len: ");
-	ft_putnbr(ft_strlen(cmd));
-	ft_putendl("");
-	ft_lst_add_back(&hash->queue, ft_lstnew(cmd, ft_strlen(cmd) + 1));
-	return(1);
+	size_t	i;
+	size_t	count;
+
+	count = 0;
+	i = 0;
+	while (tab[i++])
+		count++;
+	return (count);
 }
 
-int	handle_string(char *cmd, t_hash *hash)
+char		*implode(char **tab, char delim)
 {
-	int i;
-	int y;
-	char new[255];
+	char	*str;
+	size_t	len;
+	size_t	i;
+	size_t	j;
+	size_t	index;
 
-	y = 0;
-	i = 1;
-	new[0] = -1;
-	while(cmd[y] != '\0')
+	len = tablen(tab);
+	if (!(str = (char*)malloc(len + tabsize(tab))))
+		return (NULL);
+	i = 0;
+	index = 0;
+	while (tab[i])
 	{
-		new[i] = cmd[y];
+		j = 0;
+		while (tab[i][j])
+			str[index++] = tab[i][j++];
+		str[index++] = delim;
 		i++;
-		y++;
 	}
-	new[i] = cmd[y];
-	ft_putstr("string len: ");
-	ft_putnbr(ft_strlen(new));
-	ft_putendl("");
-	if(cmd)
-		ft_lst_add_back(&hash->queue, ft_lstnew(new, ft_strlen(new) + 1));
-	return(1);
+	str[index - 1] = 0;
+	return (str);
 }
 
+char **split_spaces(char *line)
+{
+	char **tab;
+
+	tab = ft_strsplit(line, '	');
+	tab = ft_strsplit(implode(tab,' '), ' ');
+	return(tab);
+}
 
 int	handle_flags(char *command, int8_t *flags)
 {
@@ -77,96 +95,81 @@ int	handle_flags(char *command, int8_t *flags)
 	
 }
 
-
-
-int	get_command(char *command, int8_t *flags, t_hash *hash)
+void do_hash(char *to_hash, int8_t *flags, 	uint8_t current)
 {
-	ft_putstr("command from get_command: ");
-	ft_putendl(command);
+	static void	(*eval[4])(char *, int8_t *) = {md5, prompt_md5, sha256, prompt_sha256};
+	printf("current: %d\n", current);
+	eval[current - 1](to_hash, flags);
+}
 
-	if (flags['s'])
-	{
-		handle_string(command, hash);
-		flags['s'] = 0;
-		return(1);
-	}
-	if (hash->md5 == 0 && hash->sha256 == 0)
-		if (!(ft_strequ(command, "md5")) && !(ft_strequ(command, "sha256")))
-			return(ft_ssl_error(command));
-		else if (ft_strequ(command, "md5"))
+int		handle_hash(t_hash *hash, char *arg)
+{
+	if (!(ft_strequ(arg, "md5")) && !(ft_strequ(arg, "sha256")))
+			return(ft_ssl_error(arg));
+		else if (ft_strequ(arg, "md5"))
 			hash->md5 = 1;
 		else
-			hash->sha256 = 1;
-	else
-	{
-		if (!flags['-'] && command[0] == '-')
 		{
-			if (!handle_flags(command, flags))
-				return(0);
+			printf("hello\n");
+			hash->sha256 = 3;
 		}
-		else
-		{
-			flags['-'] = 1;
-			handle_filename(command, hash);
-		}
-
-	}
-	return(1);
+		return('s');
 }
 
-int args_numbers(t_hash *hash)
-{
-	if (hash->md5)
-	{
-		printf("starf\n");
-		if(hash->queue->data && hash->queue->next->data == NULL)
-			return(1);
-		else
-			return(2);
-	}
-	if (hash->sha256)
-	{
-		if(!hash->queue->data)
-			return(3);
-		else
-			return(4);
-	}
-	return(0);
-}
-
-int get_args(int8_t *flags, t_hash *hash, char *line)
+int	parse_ssl_line(int8_t *flags, t_hash *hash, char **tab)
 {
 	int i;
-	char command[255];
-	int j;
 
 	i = 0;
-	j = 0;
-	while(line[i] != '\0')
+	printf("tabsize: %zu\n", tabsize(tab));
+	hash->prompt = 1;
+	while(tab[i])
 	{
-		while(line[i] == ' ' || line[i] == '	')
+		printf("tab; %s\n", tab[i]);
+		if (!hash->md5 && !hash->sha256)
+		{
+			if (!handle_hash(hash, tab[i]))
+				return(0);
 			i++;
-		while(line[i] != ' ' && line[i] != '	' && line[i] != '\0')
-			command[j++] = line[i++];
-		command[j] = '\0';
-		if (!get_command(command, flags, hash))
-			return(0);
-		j = 0;
+			continue;
+		}
+		else
+		{
+			printf("yo\n");
+			if (flags['s'])
+			{
+				printf("popidou\n");
+				do_hash(tab[i], flags, hash->md5 + hash->sha256);
+				flags['s'] = 0;
+				hash->prompt = 0;
+				i++;
+				continue;
+			}
+			if (!flags['-'] && tab[i][0] == '-')
+			{
+				if (!handle_flags(tab[i], flags))
+					return(0);
+				i++;
+				continue;
+			}
+			else if (hash->md5 || hash->sha256)
+			{
+				printf("on enleve le prompt a : %s\n", tab[i]);
+				hash->prompt = 0;
+				printf("on enleve les flags a : %s\n", tab[i]);
+				flags['-'] = 1;
+			}
+		}
+		do_hash(tab[i], flags, hash->md5 + hash->sha256 + hash->prompt);
+		i++;
 	}
-	printf("cc\n");
-	return (args_numbers(hash));
-}
+	if(hash->prompt == 1)
+	{
+		printf("boup boup pidoup\n");
+		do_hash(tab[i], flags, hash->md5 + hash->sha256 + hash->prompt);
+	}
 
-int	parse_ssl_line(int8_t *flags, t_hash *hash, char *line)
-{
-	uint8_t current;
-	static void	(*eval[4])(t_hash *, int8_t *) = {prompt_md5, md5, prompt_sha256, sha256};
-	if (!(current = get_args(flags, hash, line)))
-		return(0);
-	printf("md5: %d, sha: %d p: %d q: %d r: %d s:%d -:%d\n", hash->md5, hash->sha256, flags['p'], flags['q'], flags['r'], flags['s'], flags['-']);
-	eval[current - 1](hash, flags);
-	free(line);
-	return(1);
+	return (1);
 }
 
 void read_prompt_first(int8_t *flags, t_hash *hash)
@@ -181,19 +184,31 @@ void read_prompt_first(int8_t *flags, t_hash *hash)
 	{
 		if (ft_strequ(line, "q") || ft_strequ(line, "quit"))
 			return;
-		if (!parse_ssl_line(flags, hash, line))
+		if (!parse_ssl_line(flags, hash, split_spaces(line)))
 			print_usage_ssl();
 		ft_putstr("ft_ssl> ");
-
 	}
+}
+
+void test()
+{
+	char **tab;
+	int i = 0;
+
+	tab = ft_strsplit("     md5		Makefile -asbjas lol		lel", '	');
+	tab = ft_strsplit(implode(tab,' '), ' ');
+	while (tab[i])
+		printf("%s\n", tab[i++]);
 }
 
 int main(int argc, char **argv)
 {
+	argv++;
 	int i;
 	int8_t flags[128];
-	t_hash hash = {0, 0, 0, 0};
+
 	i = 0;
+	t_hash hash = {0, 0, 0};
 	ft_memset((void*)&flags, -1, 128);
 	flags['p'] = 0;
 	flags['q'] = 0;
@@ -210,7 +225,7 @@ int main(int argc, char **argv)
 	{
 		read_prompt_first(flags, &hash);
 	}
-	else if (!parse_ssl_line(flags, &hash, argv_to_str(argv, argc)))
+	else if (!parse_ssl_line(flags, &hash, argv))
 		print_usage_ssl();
 	return 0;
 }

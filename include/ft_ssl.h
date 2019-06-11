@@ -6,7 +6,7 @@
 /*   By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/08 12:34:59 by ggregoir          #+#    #+#             */
-/*   Updated: 2019/06/06 20:41:00 by ggregoir         ###   ########.fr       */
+/*   Updated: 2019/06/11 01:34:08 by ggregoir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,7 @@ typedef struct	s_hash
 {
 	uint8_t	md5;
 	uint8_t	sha256;
-	t_list	*queue;
-	char	*content;
+	uint8_t	prompt;
 }				t_hash;
 
 typedef struct	s_line
@@ -50,9 +49,11 @@ void	illegal_option(char c);
 char	*argv_to_str(char **argv, int argc);
 char	*get_file(char *filename);
 char 	*read_fd(int fd);
-void 	md5(t_hash *hash, int8_t *flags);
-void 	sha256(t_hash *hash, int8_t *flags);
-void 	prompt_md5(t_hash *hash, int8_t *flags);
-void 	prompt_sha256(t_hash *hash, int8_t *flags);
+void	md5(char *to_hash, int8_t *flags);
+void	sha256(char *to_hash, int8_t *flags);
+void	prompt_md5(char *to_hash, int8_t *flags);
+void	prompt_sha256(char *to_hash, int8_t *flags);
+char			**str_split_space(char const *s);
+int		count_words(const char *str);
 
 #endif

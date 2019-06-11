@@ -6,7 +6,7 @@
 /*   By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/10 15:27:11 by ggregoir          #+#    #+#             */
-/*   Updated: 2019/06/04 21:46:59 by ggregoir         ###   ########.fr       */
+/*   Updated: 2019/06/11 00:57:59 by ggregoir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,12 @@ char *get_file(char *filename)
 {
 	int fd;
 	
-	fd = open(filename, O_RDONLY);
+	if((fd = open(filename, O_RDONLY)) == -1)
+	{
+		ft_putstr(filename);
+		ft_putendl(": No such file or directory");
+		return(NULL);
+	}
 	return(read_fd(fd));
 }
 

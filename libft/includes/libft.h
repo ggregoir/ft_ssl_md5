@@ -6,7 +6,7 @@
 /*   By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/24 15:00:19 by jafaghpo          #+#    #+#             */
-/*   Updated: 2017/09/11 15:21:08 by ggregoir         ###   ########.fr       */
+/*   Updated: 2019/06/10 19:20:22 by ggregoir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,6 +136,7 @@ void			*ft_realloc(void *src, size_t srcsize, size_t newsize);
 char			*ft_strcjoin(char *delim, char **arr, size_t size);
 void			ft_printjoin(char *delim, char **arr, size_t size);
 int				ft_count_words(const char *str, char c);
+int				count_words_spaces(const char *str);
 void			ft_error(char *message);
 
 /*
