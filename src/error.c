@@ -6,7 +6,7 @@
 /*   By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/10 17:55:58 by ggregoir          #+#    #+#             */
-/*   Updated: 2019/06/04 22:50:15 by ggregoir         ###   ########.fr       */
+/*   Updated: 2019/06/11 19:43:27 by ggregoir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,13 @@ void		illegal_option(char c)
 	ft_putchar(c);
 	ft_putendl("");
 	exit(1);
+}
+
+int flag_string_error()
+{
+	ft_putendl("md5: option requires an argument -- s");
+	print_usage();
+	return(1);
 }
 
 int ft_ssl_error(char *command)

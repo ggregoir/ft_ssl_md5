@@ -6,7 +6,7 @@
 /*   By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/08 12:34:59 by ggregoir          #+#    #+#             */
-/*   Updated: 2019/06/11 01:34:08 by ggregoir         ###   ########.fr       */
+/*   Updated: 2019/06/11 19:42:52 by ggregoir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,8 @@ void	md5(char *to_hash, int8_t *flags);
 void	sha256(char *to_hash, int8_t *flags);
 void	prompt_md5(char *to_hash, int8_t *flags);
 void	prompt_sha256(char *to_hash, int8_t *flags);
-char			**str_split_space(char const *s);
+char	**str_split_space(char const *s);
 int		count_words(const char *str);
+int		flag_string_error();
 
 #endif

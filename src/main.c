@@ -6,7 +6,7 @@
 /*   By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/08 12:31:33 by ggregoir          #+#    #+#             */
-/*   Updated: 2019/06/11 01:59:37 by ggregoir         ###   ########.fr       */
+/*   Updated: 2019/06/11 23:59:40 by ggregoir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,6 @@ int	handle_flags(char *command, int8_t *flags)
 void do_hash(char *to_hash, int8_t *flags, 	uint8_t current)
 {
 	static void	(*eval[4])(char *, int8_t *) = {md5, prompt_md5, sha256, prompt_sha256};
-	printf("current: %d\n", current);
 	eval[current - 1](to_hash, flags);
 }
 
@@ -110,65 +109,57 @@ int		handle_hash(t_hash *hash, char *arg)
 			hash->md5 = 1;
 		else
 		{
-			printf("hello\n");
 			hash->sha256 = 3;
 		}
-		return('s');
+		return(1);
 }
 
-int	parse_ssl_line(int8_t *flags, t_hash *hash, char **tab)
+int		handle_args(int8_t *flags, t_hash *hash, int *i, char **tab)
+{
+	if (flags['s'])
+	{
+		do_hash(tab[*i], flags, hash->md5 + hash->sha256);
+		flags['s'] = 0;
+		hash->prompt = 0;
+		return(1);
+	}
+	if (!flags['-'] && tab[*i][0] == '-')
+	{
+		if (!handle_flags(tab[*i], flags))
+			return(0);
+	}
+	else if (hash->md5 || hash->sha256)
+	{
+		hash->prompt = 0;
+		flags['-'] = 1;
+		do_hash(tab[*i], flags, hash->md5 + hash->sha256 + hash->prompt);
+	}
+	return(1);
+}
+
+int		parse_ssl_line(int8_t *flags, t_hash *hash, char **tab)
 {
 	int i;
 
-	i = 0;
-	printf("tabsize: %zu\n", tabsize(tab));
+	i = -1;
 	hash->prompt = 1;
-	while(tab[i])
+	while(tab[++i])
 	{
-		printf("tab; %s\n", tab[i]);
 		if (!hash->md5 && !hash->sha256)
 		{
 			if (!handle_hash(hash, tab[i]))
 				return(0);
-			i++;
-			continue;
 		}
 		else
 		{
-			printf("yo\n");
-			if (flags['s'])
-			{
-				printf("popidou\n");
-				do_hash(tab[i], flags, hash->md5 + hash->sha256);
-				flags['s'] = 0;
-				hash->prompt = 0;
-				i++;
-				continue;
-			}
-			if (!flags['-'] && tab[i][0] == '-')
-			{
-				if (!handle_flags(tab[i], flags))
-					return(0);
-				i++;
-				continue;
-			}
-			else if (hash->md5 || hash->sha256)
-			{
-				printf("on enleve le prompt a : %s\n", tab[i]);
-				hash->prompt = 0;
-				printf("on enleve les flags a : %s\n", tab[i]);
-				flags['-'] = 1;
-			}
+			if (!handle_args(flags, hash, &i, tab))
+				return(0);
 		}
-		do_hash(tab[i], flags, hash->md5 + hash->sha256 + hash->prompt);
-		i++;
 	}
+	if (flags['s'])
+		return(flag_string_error());
 	if(hash->prompt == 1)
-	{
-		printf("boup boup pidoup\n");
 		do_hash(tab[i], flags, hash->md5 + hash->sha256 + hash->prompt);
-	}
-
 	return (1);
 }
 
@@ -188,17 +179,6 @@ void read_prompt_first(int8_t *flags, t_hash *hash)
 			print_usage_ssl();
 		ft_putstr("ft_ssl> ");
 	}
-}
-
-void test()
-{
-	char **tab;
-	int i = 0;
-
-	tab = ft_strsplit("     md5		Makefile -asbjas lol		lel", '	');
-	tab = ft_strsplit(implode(tab,' '), ' ');
-	while (tab[i])
-		printf("%s\n", tab[i++]);
 }
 
 int main(int argc, char **argv)
