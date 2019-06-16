@@ -6,7 +6,7 @@
 /*   By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/08 12:31:33 by ggregoir          #+#    #+#             */
-/*   Updated: 2019/06/11 23:59:40 by ggregoir         ###   ########.fr       */
+/*   Updated: 2019/06/16 19:10:41 by ggregoir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,14 +170,14 @@ void read_prompt_first(int8_t *flags, t_hash *hash)
 	char *line;
 
 	fd = 0;
-	ft_putstr("ft_ssl> ");
+	ft_printf("ft_ssl> ");
 	while ((ret = get_next_line(fd, &line)) > 0)
 	{
 		if (ft_strequ(line, "q") || ft_strequ(line, "quit"))
 			return;
 		if (!parse_ssl_line(flags, hash, split_spaces(line)))
 			print_usage_ssl();
-		ft_putstr("ft_ssl> ");
+		ft_printf("ft_ssl> ");
 	}
 }
 

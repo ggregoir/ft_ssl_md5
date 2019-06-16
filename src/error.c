@@ -6,7 +6,7 @@
 /*   By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/10 17:55:58 by ggregoir          #+#    #+#             */
-/*   Updated: 2019/06/11 19:43:27 by ggregoir         ###   ########.fr       */
+/*   Updated: 2019/06/16 19:23:33 by ggregoir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,35 +14,31 @@
 
 void		print_usage()
 {
-	ft_putendl("usage: ft_ssl command [command opts] [command args]");
+	ft_dprintf(2, "usage: ft_ssl command [command opts] [command args]\n");
 }
 
 void		print_usage_ssl()
 {
-	ft_putendl("Standard commands\n");
-	ft_putendl("Message Digest commands\nmd5\nsha256\n");
-	ft_putendl("Cipher commands\n");
+	ft_printf("Standard commands\n\n");
+	ft_printf("Message Digest commands\nmd5\nsha256\n\n");
+	ft_printf("Cipher commands\n\n");
 }
 
 void		illegal_option(char c)
 {
-	ft_putstr("md5: illegal option -- ");
-	ft_putchar(c);
-	ft_putendl("");
-	exit(1);
+	ft_dprintf(2, "md5: illegal option -- %c \n", c);
+	exit(EXIT_FAILURE);
 }
 
 int flag_string_error()
 {
-	ft_putendl("md5: option requires an argument -- s");
+	ft_dprintf(2, "md5: option requires an argument -- s\n");
 	print_usage();
 	return(1);
 }
 
 int ft_ssl_error(char *command)
 {
-	ft_putstr("ft_ssl: Error: '");
-	ft_putstr(command);
-	ft_putendl("' is an invalid command.\n");
+	ft_dprintf(2, "ft_ssl: Error: '%s' is an invalid command.\n\n", command);
 	return(0);
 }

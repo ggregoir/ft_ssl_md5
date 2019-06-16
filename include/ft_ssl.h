@@ -6,22 +6,23 @@
 /*   By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/08 12:34:59 by ggregoir          #+#    #+#             */
-/*   Updated: 2019/06/11 19:42:52 by ggregoir         ###   ########.fr       */
+/*   Updated: 2019/06/16 22:48:14 by ggregoir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef NPUZZLE_H
 # define NPUZZLE_H
 
-# include "../libft/includes/libft.h"
-
-//delete me 
-# include <stdio.h>
+# include "../libft/include/libft.h"
+#include <fcntl.h>
 
 # define MAX_FILE_SIZE 209715200
 
 # define TRUE 1
 # define FALSE 0
+
+const uint32_t	g_sine[64];
+const uint32_t	g_shifts[64];
 
 typedef struct	s_hash
 {
@@ -29,6 +30,38 @@ typedef struct	s_hash
 	uint8_t	sha256;
 	uint8_t	prompt;
 }				t_hash;
+
+typedef struct	s_md5
+{
+	unsigned int h0;
+	unsigned int h1;
+	unsigned int h2;
+	unsigned int h3;
+	unsigned int hh0;
+	unsigned int hh1;
+	unsigned int hh2;
+	unsigned int hh3;
+}				t_md5;
+
+typedef struct	s_sha
+{
+	unsigned int h0;
+	unsigned int h1;
+	unsigned int h2;
+	unsigned int h3;
+	unsigned int h4;
+	unsigned int h5;
+	unsigned int h6;
+	unsigned int h7;
+	unsigned int hh0;
+	unsigned int hh1;
+	unsigned int hh2;
+	unsigned int hh3;
+	unsigned int hh4;
+	unsigned int hh5;
+	unsigned int hh6;
+	unsigned int hh7;
+}				t_sha;
 
 typedef struct	s_line
 {
