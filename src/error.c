@@ -6,7 +6,7 @@
 /*   By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/10 17:55:58 by ggregoir          #+#    #+#             */
-/*   Updated: 2019/06/16 19:23:33 by ggregoir         ###   ########.fr       */
+/*   Updated: 2019/06/27 18:47:42 by ggregoir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ void		print_usage_ssl()
 void		illegal_option(char c)
 {
 	ft_dprintf(2, "md5: illegal option -- %c \n", c);
+	print_usage();
 	exit(EXIT_FAILURE);
 }
 

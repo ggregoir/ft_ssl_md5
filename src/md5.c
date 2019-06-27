@@ -6,7 +6,7 @@
 /*   By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/04 20:25:01 by ggregoir          #+#    #+#             */
-/*   Updated: 2019/06/27 15:42:25 by ggregoir         ###   ########.fr       */
+/*   Updated: 2019/06/27 19:26:35 by ggregoir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,31 +137,85 @@ void		print_md5(char *to_hash)
 
 void		prompt_md5(char *to_hash __attribute__((unused)), int8_t *flags __attribute__((unused)))
 {
-	to_hash = read_fd(0);
-	print_md5(to_hash);
-	ft_printf("\n");
-
-	exit(EXIT_SUCCESS);
+	if (flags['p'])
+	{
+		flags['p'] = 0;
+		to_hash = read_fd(0);
+		ft_printf("%s", to_hash);
+		print_md5(to_hash);
+		write(1, "\n", 1);
+	}
+	else
+	{
+		to_hash = read_fd(0);
+		print_md5(to_hash);
+		ft_printf("\n");
+		exit(EXIT_SUCCESS);
+	}
 }
 
 void		md5(char *to_hash, int8_t *flags __attribute__((unused)))
 {
 	char *filename;
 
-	if (flags['s'])
+	if (flags['p'])
 	{
-		ft_printf("MD5 (\"%s\") = ", to_hash);
-		print_md5(to_hash);
-		ft_printf("\n");
+		flags['p'] = 0;
+		filename = read_fd(0);
+		ft_printf("%s", filename);
+		print_md5(filename);
+		write(1, "\n", 1);
+	}
+	if (flags['q'])
+	{
+		if (flags['s'])
+		{
+			print_md5(to_hash);
+			write(1, "\n", 1);
+		}
+		else
+		{
+			if ((to_hash = get_file(to_hash)) != NULL)
+			{
+				print_md5(to_hash);
+				write(1, "\n", 1);
+			}
+		}
+	}
+	else if (flags['r'])
+	{
+		if (flags['s'])
+		{
+			print_md5(to_hash);
+			ft_printf(" \"%s\"\n", to_hash);
+		}
+		else
+		{
+			filename = to_hash;
+			if ((to_hash = get_file(to_hash)) != NULL)
+			{
+				print_md5(to_hash);
+				ft_printf(" %s\n", filename);
+			}
+		}
 	}
 	else
 	{
-		filename = to_hash;
-		if ((to_hash = get_file(to_hash)) != NULL)
+		if (flags['s'])
 		{
-				ft_printf("MD5 (%s) = ", filename);
-				print_md5(to_hash);
-				ft_printf("\n");
+			ft_printf("MD5 (\"%s\") = ", to_hash);
+			print_md5(to_hash);
+			ft_printf("\n");
+		}
+		else
+		{
+			filename = to_hash;
+			if ((to_hash = get_file(to_hash)) != NULL)
+			{
+					ft_printf("MD5 (%s) = ", filename);
+					print_md5(to_hash);
+					ft_printf("\n");
+			}
 		}
 	}
 }

@@ -1,0 +1,1 @@
+./ft_ssl md5 $@ > my.txt && echo "end of my md5" && md5 $@ > real.txt && echo "end of real md5" && diff my.txt real.txt 
