@@ -6,7 +6,7 @@
 /*   By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/04 20:25:01 by ggregoir          #+#    #+#             */
-/*   Updated: 2019/06/16 20:41:27 by ggregoir         ###   ########.fr       */
+/*   Updated: 2019/06/27 15:42:25 by ggregoir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,33 @@ unsigned int	rotate_left(unsigned int x, unsigned int c)
 	return (x);
 }
 
+void		init_hash(t_md5 *hash)
+{
+	hash->h0 = 0x67452301;
+	hash->h1 = 0xefcdab89;
+	hash->h2 = 0x98badcfe;
+	hash->h3 = 0x10325476;
+}
+
+void		update_hash_post(t_md5 *hash)
+{
+	hash->hh0 = hash->h0;
+    hash->hh1 = hash->h1;
+    hash->hh2 = hash->h2;
+    hash->hh3 = hash->h3;
+}
+
+void		update_hash_past(t_md5 *hash)
+{
+	hash->h0 += hash->hh0;
+    hash->h1 += hash->hh1;
+    hash->h2 += hash->hh2;
+    hash->h3 += hash->hh3;
+}
+
 void			md5_encrypt(t_md5 *hash, unsigned int *w)
 {
-	unsigned int fghi;
+	unsigned int f;
 	unsigned int g;
 	unsigned int i;
 	unsigned int tmp;
@@ -28,38 +52,39 @@ void			md5_encrypt(t_md5 *hash, unsigned int *w)
 	g = 0;
 	i = 0;
 	tmp = 0;
-	fghi = 0;
+	f = 0;
 	while (i < 64)
 	{
 		if (i < 16)
 		{
-			fghi = (hash->hh1 & hash->hh2) | ((~hash->hh1) & hash->hh3);
+			f = (hash->hh1 & hash->hh2) | ((~hash->hh1) & hash->hh3);
 			g = i;
 		}
 		else if (i < 32)
 		{
-			fghi = (hash->hh3 & hash->hh1) | ((hash->hh2) & (~hash->hh3));
+			f = (hash->hh3 & hash->hh1) | ((hash->hh2) & (~hash->hh3));
 			g = (5 * i + 1) % 16;
 		}
 		else if (i < 48)
 		{
-			fghi = hash->hh1 ^ hash->hh2 ^ hash->hh3;
+			f = hash->hh1 ^ hash->hh2 ^ hash->hh3;
 			g = (3 * i + 5) % 16;
 		}
 		else if (i < 64)
 		{
-			fghi = hash->hh2 ^ (hash->hh1 | (~hash->hh3));
+			f = hash->hh2 ^ (hash->hh1 | (~hash->hh3));
 			g = (7 * i) % 16;
 		}
 		tmp = hash->hh3;
 		hash->hh3 = hash->hh2;
 		hash->hh2 = hash->hh1;
-		hash->hh1 = hash->hh1 + rotate_left(hash->hh0 + fghi + g_sine[i] + w[g], g_shifts[i]);
+		//printf("rotateLeft(%x + %x + %x + %x, %d)\n", hash->hh0, f, g_sine[i], w[g], g_shifts[i]);
+		hash->hh1 = hash->hh1 + rotate_left(hash->hh0 + f + g_sine[i] + w[g], g_shifts[i]);
 		hash->hh0 = tmp;
 		i++;
 	}
+	update_hash_past(hash);
 }
-
 
 void md5_algo(char *to_hash, int len, t_md5 *hash)
 {
@@ -73,11 +98,8 @@ void md5_algo(char *to_hash, int len, t_md5 *hash)
 	newlen = (bitlen + 1);
 	offset = 0;
 	w = 0;
-
 	while (newlen%512 != 448)
-	{
 		newlen++;
-	}
 	newlen /= 8;
 	msg = ft_memalloc(newlen + 64);
 	ft_memcpy(msg, to_hash, len);
@@ -86,23 +108,11 @@ void md5_algo(char *to_hash, int len, t_md5 *hash)
 	while(offset < newlen)
 	{
 		w = (unsigned int *)(msg + offset);
+     	update_hash_post(hash);
 		md5_encrypt(hash, w);
 		offset += 64;
 	}
 	free(msg);
-
-}
-
-void		init_hash(t_md5 *hash)
-{
-	hash->h0 = 0x67452301;
-	hash->h1 = 0xefcdab89;
-	hash->h2 = 0x98badcfe;
-	hash->h3 = 0x10325476;
-	hash->hh0 = hash->h0;
-	hash->hh1 = hash->h1;
-	hash->hh2 = hash->h2;
-	hash->hh3 = hash->h3;
 }
 
 void		print_md5(char *to_hash)
@@ -115,10 +125,6 @@ void		print_md5(char *to_hash)
 	len = ft_strlen(to_hash);
 	init_hash(&hash);
 	md5_algo(to_hash, len, &hash);
-	hash.h0 += hash.hh0;
-	hash.h1 += hash.hh1;
-	hash.h2 += hash.hh2;
-	hash.h3 += hash.hh3;
 	p=(unsigned char *)&hash.h0;
 	ft_printf("%2.2x%2.2x%2.2x%2.2x", p[0], p[1], p[2], p[3]);
     p=(unsigned char *)&hash.h1;
