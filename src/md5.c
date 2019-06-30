@@ -6,7 +6,7 @@
 /*   By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/04 20:25:01 by ggregoir          #+#    #+#             */
-/*   Updated: 2019/06/27 19:26:35 by ggregoir         ###   ########.fr       */
+/*   Updated: 2019/06/30 22:50:19 by ggregoir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,7 @@
 
 unsigned int	rotate_left(unsigned int x, unsigned int c)
 {
-	x = (((x) << (c)) | ((x) >> (32 - (c))));
-	return (x);
+	return (((x) << (c)) | ((x) >> (32 - (c))));
 }
 
 void		init_hash(t_md5 *hash)
@@ -78,7 +77,6 @@ void			md5_encrypt(t_md5 *hash, unsigned int *w)
 		tmp = hash->hh3;
 		hash->hh3 = hash->hh2;
 		hash->hh2 = hash->hh1;
-		//printf("rotateLeft(%x + %x + %x + %x, %d)\n", hash->hh0, f, g_sine[i], w[g], g_shifts[i]);
 		hash->hh1 = hash->hh1 + rotate_left(hash->hh0 + f + g_sine[i] + w[g], g_shifts[i]);
 		hash->hh0 = tmp;
 		i++;
