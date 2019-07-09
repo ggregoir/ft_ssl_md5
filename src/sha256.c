@@ -6,18 +6,24 @@
 /*   By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/05 23:14:36 by ggregoir          #+#    #+#             */
-/*   Updated: 2019/06/30 23:37:12 by ggregoir         ###   ########.fr       */
+/*   Updated: 2019/07/09 23:33:15 by ggregoir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ssl.h"
 
-uint32_t	rotate_right(unsigned int x, unsigned int c)
+unsigned int	rotate_right(unsigned int x, unsigned int c)
 {
-	return (((x) >> (c)) | ((x) << (32 - (c))));
+	return ((x >> c) | (x << (32 - c)));
 }
 
-void		init_hash(t_sha256 *hash)
+unsigned int	swap_bytes_32bit(unsigned int val)
+{
+	val = ((val << 8) & 0xFF00FF00) | ((val >> 8) & 0xFF00FF);
+	return (val << 16) | (val >> 16);
+}
+
+static void		init_hash(t_sha256 *hash)
 {
 	hash->h0 = 0x6a09e667;
 	hash->h1 = 0xbb67ae85;
@@ -29,7 +35,7 @@ void		init_hash(t_sha256 *hash)
 	hash->h7 = 0x5be0cd19;
 }
 
-void		update_hash_post(t_sha256 *hash)
+static void		update_hash_pre(t_sha256 *hash)
 {
 	hash->hh0 = hash->h0;
     hash->hh1 = hash->h1;
@@ -41,7 +47,7 @@ void		update_hash_post(t_sha256 *hash)
     hash->hh7 = hash->h7;
 }
 
-void		update_hash_past(t_sha256 *hash)
+static void		update_hash_post(t_sha256 *hash)
 {
 	hash->h0 += hash->hh0;
     hash->h1 += hash->hh1;
@@ -53,18 +59,12 @@ void		update_hash_past(t_sha256 *hash)
     hash->h7 += hash->hh7;
 }
 
-void			sha256_encrypt(t_md5 *hash, unsigned int *w)
+void			sha256_encrypt(t_sha256 *hash, unsigned int *w)
 {
-	unsigned int f;
-	unsigned int g;
 	unsigned int i;
-	unsigned int tmp;
 
-	g = 0;
 	i = 0;
-	tmp = 0;
-	f = 0;
-	while (i < 64)
+	/*while (i < 64)
 	{
 		if (i < 16)
 		{
@@ -92,52 +92,149 @@ void			sha256_encrypt(t_md5 *hash, unsigned int *w)
 		hash->hh1 = hash->hh1 + rotate_left(hash->hh0 + f + g_sine[i] + w[g], g_shifts[i]);
 		hash->hh0 = tmp;
 		i++;
+	}*/
+
+	while (i < 64)
+	{
+		hash->t1 = rotate_right(hash->hh4, 6) ^ rotate_right(hash->hh4, 11)
+			^ rotate_right(hash->hh4, 25);
+		hash->ch = (hash->hh4 & hash->hh5) ^ (~hash->hh4 & hash->hh6);
+		hash->tmp1 = hash->hh7 + hash->t1 + hash->ch + g_round[i] + w[i];
+		hash->t0 = rotate_right(hash->hh0, 2) ^ rotate_right(hash->hh0, 13)
+			^ rotate_right(hash->hh0, 22);
+		hash->maj = (hash->hh0 & hash->hh1) ^ (hash->hh0 & hash->hh2) ^ (hash->hh1 & hash->hh2);
+		hash->tmp2 = hash->t0 + hash->maj;
+		hash->hh7 = hash->hh6;
+		hash->hh6 = hash->hh5;
+		hash->hh5 = hash->hh4;
+		hash->hh4 = hash->hh3 + hash->tmp1;
+		hash->hh3 = hash->hh2;
+		hash->hh2 = hash->hh1;
+		hash->hh1 = hash->hh0;
+		hash->hh0 = hash->tmp1 + hash->tmp2;
+		i++;
 	}
-	update_hash_past(hash);
+
+	/*
+	while (i < 64)
+	{
+		m->t1 = right_rotate(m->e, 6) ^ right_rotate(m->e, 11)
+			^ right_rotate(m->e, 25);
+		m->ch = (m->e & m->f) ^ (~m->e & m->g);
+		m->temp1 = m->h + m->t1 + m->ch + g_cube[i] + m->w[i];
+		m->t0 = right_rotate(m->a, 2) ^ right_rotate(m->a, 13)
+			^ right_rotate(m->a, 22);
+		m->maj = (m->a & m->b) ^ (m->a & m->c) ^ (m->b & m->c);
+		m->temp2 = m->t0 + m->maj;
+		m->h = m->g;
+		m->g = m->f;
+		m->f = m->e;
+		m->e = m->d + m->temp1;
+		m->d = m->c;
+		m->c = m->b;
+		m->b = m->a;
+		m->a = m->temp1 + m->temp2;
+		i++;
+	}
+	*/
+	update_hash_post(hash);
 }
 
-static void		schedule_array(t_sha *hash, unsigned int *w)
+static void		schedule_array(unsigned int *w, unsigned int *msg, int offset)
 {
 	unsigned int s0;
 	unsigned int s1;
+	int i;
+
+	ft_memcpy(w, &msg[offset * 16], 16 * sizeof(uint32_t));
 	i = 16;
 	while (i < 64)
 	{
-		s0 = right_rotate(w[i - 15], 7) ^ right_rotate(w[i - 15], 18)
+		s0 = rotate_right(w[i - 15], 7) ^ rotate_right(w[i - 15], 18)
 			^ (w[i - 15] >> 3);
-		s1 = right_rotate(w[i - 2], 17) ^ right_rotate(m->w[i - 2], 19)
+		s1 = rotate_right(w[i - 2], 17) ^ rotate_right(w[i - 2], 19)
 			^ (w[i - 2] >> 10);
 		w[i] = w[i - 16] + s0 + w[i - 7] + s1;
 		i++;
 	}
 }
 
+static void		add_padding(int len, unsigned int *msg)
+{
+	uint32_t	pad;
+	size_t		last_bytes;
+	size_t		index;
+
+	last_bytes = len % 4;
+	index = len / 4;
+	pad = 0x00000080;
+	if (last_bytes == 1)
+		pad = 0x00008000;
+	else if (last_bytes == 2)
+		pad = 0x00800000;
+	else if (last_bytes == 3)
+		pad = 0x80000000;
+	else if (last_bytes == 4)
+	{
+		index++;
+	}
+	msg[index] = msg[index] | pad;
+}
+
+static void		add_size(unsigned int *msg, unsigned int bitlen, unsigned int newlen)
+{
+	size_t		size;
+	size_t		index;
+
+	size = 0;
+	if (bitlen)
+	{
+		size = bitlen - 64;
+	}
+	index = newlen * 16 - 2;
+	
+	msg[index] = (size >> 32) & 0xffffffff;
+	msg[index + 1] = size & 0xffffffff;
+}
+
 void sha256_algo(char *to_hash, int len, t_sha256 *hash)
 {
-	unsigned char *msg;
-	int newlen;
-	int offset;
+	unsigned int *msg;
+	unsigned int newlen;
+	unsigned int offset;
 	unsigned int bitlen;
-	unsigned int *w;
+	unsigned int w[64];
+	unsigned int padding_bitsize;
 
 	bitlen = len * 8;
-	newlen = (bitlen + 1);
 	offset = 0;
-	w = 0;
-	while (newlen%512 != 448)
-		newlen++;
-	newlen /= 8;
-	msg = ft_memalloc(newlen + 64);
+	if (bitlen)
+		bitlen += 64;
+	newlen = 1 + bitlen / 512;
+	padding_bitsize = newlen * 512 - bitlen % 512;
+	if (newlen > 1)
+		padding_bitsize -= 512 * (newlen - 1);
+	if (!(msg = (uint32_t*)ft_memalloc(sizeof(uint32_t) * newlen * 16)))
+	{
+		ft_printf("MALLOC ERROR\n");
+		exit(EXIT_FAILURE);
+	}
 	ft_memcpy(msg, to_hash, len);
-	msg[len] = 128;
-	ft_memcpy(msg + newlen, &bitlen, 4);
+	add_padding(len, msg);
+	unsigned int i = 0;
+	while (i < newlen * 16)
+	{
+		msg[i] = swap_bytes_32bit(msg[i]);
+		i++;
+	}
+	add_size(msg, bitlen, newlen);
+
 	while(offset < newlen)
 	{
-		w = (unsigned int *)(msg + offset);
-
-     	update_hash_post(hash);
+		schedule_array(w, msg, offset);
+     	update_hash_pre(hash);
 		sha256_encrypt(hash, w);
-		offset += 64;
+		offset ++;
 	}
 	free(msg);
 }
@@ -145,50 +242,97 @@ void sha256_algo(char *to_hash, int len, t_sha256 *hash)
 void		print_sha256(char *to_hash)
 {
 	size_t		len;
-	t_sha		hash;
-	unsigned char *p;
+	t_sha256	h;
 
-	hash = (t_sha256){0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+	ft_bzero(&h, sizeof(h));
 	len = ft_strlen(to_hash);
-	init_hash(&hash);
-	md5_algo(to_hash, len, &hash);
-	p=(unsigned char *)&hash.h0;
-	ft_printf("%2.2x%2.2x%2.2x%2.2x", p[0], p[1], p[2], p[3]);
-    p=(unsigned char *)&hash.h1;
-	ft_printf("%2.2x%2.2x%2.2x%2.2x", p[0], p[1], p[2], p[3]);
-    p=(unsigned char *)&hash.h2;
-	ft_printf("%2.2x%2.2x%2.2x%2.2x", p[0], p[1], p[2], p[3]);
-    p=(unsigned char *)&hash.h3;
-    ft_printf("%2.2x%2.2x%2.2x%2.2x", p[0], p[1], p[2], p[3]);
-    p=(unsigned char *)&hash.h4;
-	ft_printf("%2.2x%2.2x%2.2x%2.2x", p[0], p[1], p[2], p[3]);
-    p=(unsigned char *)&hash.h5;
-	ft_printf("%2.2x%2.2x%2.2x%2.2x", p[0], p[1], p[2], p[3]);
-    p=(unsigned char *)&hash.h6;
-	ft_printf("%2.2x%2.2x%2.2x%2.2x", p[0], p[1], p[2], p[3]);
-    p=(unsigned char *)&hash.h7;
-    ft_printf("%2.2x%2.2x%2.2x%2.2x", p[0], p[1], p[2], p[3]);
+	init_hash(&h);
+	sha256_algo(to_hash, len, &h);
+	ft_printf("%.8x%.8x%.8x%.8x%.8x%.8x%.8x%.8x",h.h0,h.h1,h.h2,h.h3,
+		h.h4,h.h5,h.h6,h.h7);
 }
 
 void		prompt_sha256(char *to_hash __attribute__((unused)), int8_t *flags __attribute__((unused)))
 {
-	to_hash = read_fd(0);
-	printf("\nje dois hash:%s\n", to_hash);
-	exit(EXIT_SUCCESS);
+	if (flags['p'])
+	{
+		flags['p'] = 0;
+		to_hash = read_fd(0);
+		ft_printf("%s", to_hash);
+		print_sha256(to_hash);
+		write(1, "\n", 1);
+	}
+	else
+	{
+		to_hash = read_fd(0);
+		print_sha256(to_hash);
+		ft_printf("\n");
+		exit(EXIT_SUCCESS);
+	}
 }
 
 void		sha256(char *to_hash, int8_t *flags __attribute__((unused)))
 {
 	char *filename;
 
-	if (flags['s'])
+	if (flags['p'])
 	{
-		printf("SHA256(\"%s\") = steak hashé\n", to_hash);
+		flags['p'] = 0;
+		filename = read_fd(0);
+		ft_printf("%s", filename);
+		print_sha256(filename);
+		write(1, "\n", 1);
+	}
+	if (flags['q'])
+	{
+		if (flags['s'])
+		{
+			print_sha256(to_hash);
+			write(1, "\n", 1);
+		}
+		else
+		{
+			if ((to_hash = get_file(to_hash)) != NULL)
+			{
+				print_sha256(to_hash);
+				write(1, "\n", 1);
+			}
+		}
+	}
+	else if (flags['r'])
+	{
+		if (flags['s'])
+		{
+			print_sha256(to_hash);
+			ft_printf(" \"%s\"\n", to_hash);
+		}
+		else
+		{
+			filename = to_hash;
+			if ((to_hash = get_file(to_hash)) != NULL)
+			{
+				print_sha256(to_hash);
+				ft_printf(" %s\n", filename);
+			}
+		}
 	}
 	else
 	{
-	filename = to_hash;
-	if ((to_hash = get_file(to_hash)) != NULL)
-			printf("SHA256(%s) = %s\n", filename, to_hash);
+		if (flags['s'])
+		{
+			ft_printf("SHA256(\"%s\")= ", to_hash);
+			print_sha256(to_hash);
+			ft_printf("\n");
+		}
+		else
+		{
+			filename = to_hash;
+			if ((to_hash = get_file(to_hash)) != NULL)
+			{
+					ft_printf("SHA256(%s)= ", filename);
+					print_sha256(to_hash);
+					ft_printf("\n");
+			}
+		}
 	}
 }

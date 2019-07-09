@@ -6,7 +6,7 @@
 /*   By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/04 20:25:01 by ggregoir          #+#    #+#             */
-/*   Updated: 2019/06/30 22:50:19 by ggregoir         ###   ########.fr       */
+/*   Updated: 2019/07/09 23:31:13 by ggregoir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ unsigned int	rotate_left(unsigned int x, unsigned int c)
 	return (((x) << (c)) | ((x) >> (32 - (c))));
 }
 
-void		init_hash(t_md5 *hash)
+static void		init_hash(t_md5 *hash)
 {
 	hash->h0 = 0x67452301;
 	hash->h1 = 0xefcdab89;
@@ -25,7 +25,7 @@ void		init_hash(t_md5 *hash)
 	hash->h3 = 0x10325476;
 }
 
-void		update_hash_post(t_md5 *hash)
+static void		update_hash_pre(t_md5 *hash)
 {
 	hash->hh0 = hash->h0;
     hash->hh1 = hash->h1;
@@ -33,7 +33,7 @@ void		update_hash_post(t_md5 *hash)
     hash->hh3 = hash->h3;
 }
 
-void		update_hash_past(t_md5 *hash)
+static void		update_hash_post(t_md5 *hash)
 {
 	hash->h0 += hash->hh0;
     hash->h1 += hash->hh1;
@@ -81,7 +81,7 @@ void			md5_encrypt(t_md5 *hash, unsigned int *w)
 		hash->hh0 = tmp;
 		i++;
 	}
-	update_hash_past(hash);
+	update_hash_post(hash);
 }
 
 void md5_algo(char *to_hash, int len, t_md5 *hash)
@@ -106,7 +106,7 @@ void md5_algo(char *to_hash, int len, t_md5 *hash)
 	while(offset < newlen)
 	{
 		w = (unsigned int *)(msg + offset);
-     	update_hash_post(hash);
+     	update_hash_pre(hash);
 		md5_encrypt(hash, w);
 		offset += 64;
 	}

@@ -6,7 +6,7 @@
 /*   By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/08 12:34:59 by ggregoir          #+#    #+#             */
-/*   Updated: 2019/06/16 22:48:14 by ggregoir         ###   ########.fr       */
+/*   Updated: 2019/07/09 23:22:48 by ggregoir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 
 const uint32_t	g_sine[64];
 const uint32_t	g_shifts[64];
+const uint32_t	g_round[64];
 
 typedef struct	s_hash
 {
@@ -43,7 +44,7 @@ typedef struct	s_md5
 	unsigned int hh3;
 }				t_md5;
 
-typedef struct	s_sha
+typedef struct	s_sha256
 {
 	unsigned int h0;
 	unsigned int h1;
@@ -61,7 +62,13 @@ typedef struct	s_sha
 	unsigned int hh5;
 	unsigned int hh6;
 	unsigned int hh7;
-}				t_sha;
+	unsigned int t1;
+	unsigned int ch;
+	unsigned int t0;
+	unsigned int tmp1;
+	unsigned int tmp2;
+	unsigned int maj;
+}				t_sha256;
 
 typedef struct	s_line
 {
