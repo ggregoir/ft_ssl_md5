@@ -6,69 +6,11 @@
 /*   By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/08 12:31:33 by ggregoir          #+#    #+#             */
-/*   Updated: 2019/06/27 19:08:36 by ggregoir         ###   ########.fr       */
+/*   Updated: 2019/07/11 20:06:58 by ggregoir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ssl.h"
-
-size_t		tablen(char **tab)
-{
-	size_t	i;
-	size_t	count;
-
-	count = 0;
-	i = 0;
-	while (tab[i])
-		count += ft_strlen(tab[i++]);
-	return (count);
-}
-
-size_t		tabsize(char **tab)
-{
-	size_t	i;
-	size_t	count;
-
-	count = 0;
-	i = 0;
-	while (tab[i++])
-		count++;
-	return (count);
-}
-
-char		*implode(char **tab, char delim)
-{
-	char	*str;
-	size_t	len;
-	size_t	i;
-	size_t	j;
-	size_t	index;
-
-	len = tablen(tab);
-	if (!(str = (char*)malloc(len + tabsize(tab))))
-		return (NULL);
-	i = 0;
-	index = 0;
-	while (tab[i])
-	{
-		j = 0;
-		while (tab[i][j])
-			str[index++] = tab[i][j++];
-		str[index++] = delim;
-		i++;
-	}
-	str[index - 1] = 0;
-	return (str);
-}
-
-char **split_spaces(char *line)
-{
-	char **tab;
-
-	tab = ft_strsplit(line, '	');
-	tab = ft_strsplit(implode(tab,' '), ' ');
-	return(tab);
-}
 
 int	handle_flags(char *command, int8_t *flags)
 {
@@ -92,7 +34,6 @@ int	handle_flags(char *command, int8_t *flags)
 		}
 		return (1);
 	}
-	
 }
 
 void do_hash(char *to_hash, int8_t *flags, 	uint8_t current)
@@ -201,12 +142,6 @@ int main(int argc, char **argv)
 	flags['r'] = 0;
 	flags['s'] = 0;
 	flags['-'] = 0;
-
-
-	// ft_putstr("argc: ");
-	// ft_putnbr(argc);
-	// ft_putendl("");
-
 	if (argc <= 1)
 	{
 		read_prompt_first(flags, &hash);

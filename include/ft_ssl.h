@@ -6,7 +6,7 @@
 /*   By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/08 12:34:59 by ggregoir          #+#    #+#             */
-/*   Updated: 2019/07/09 23:22:48 by ggregoir         ###   ########.fr       */
+/*   Updated: 2019/07/11 20:07:37 by ggregoir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ typedef struct	s_line
 
 
 
-int		match_str(char *str, char *to_match);
+char	**split_spaces(char *line)
 char	*ft_strjoin_and_free(char *s1, char *s2, char c, int at);
 int		get_next_line(const int fd, char **line);
 void	print_usage();
