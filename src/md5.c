@@ -6,24 +6,11 @@
 /*   By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/04 20:25:01 by ggregoir          #+#    #+#             */
-/*   Updated: 2019/07/16 02:09:09 by ggregoir         ###   ########.fr       */
+/*   Updated: 2019/07/19 02:05:07 by ggregoir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ssl.h"
-
-unsigned int	rotate_left(unsigned int x, unsigned int c)
-{
-	return (((x) << (c)) | ((x) >> (32 - (c))));
-}
-
-static void		init_hash(t_md5 *hash)
-{
-	hash->h0 = 0x67452301;
-	hash->h1 = 0xefcdab89;
-	hash->h2 = 0x98badcfe;
-	hash->h3 = 0x10325476;
-}
 
 static void		update_hash_pre(t_md5 *hash)
 {
@@ -33,19 +20,35 @@ static void		update_hash_pre(t_md5 *hash)
     hash->hh3 = hash->h3;
 }
 
-static void		update_hash_post(t_md5 *hash)
+static void		md5_shifts(t_md5 *hash, unsigned int *f,unsigned int *g, int i)
 {
-	hash->h0 += hash->hh0;
-    hash->h1 += hash->hh1;
-    hash->h2 += hash->hh2;
-    hash->h3 += hash->hh3;
+	if (i < 16)
+	{
+		*f = (hash->hh1 & hash->hh2) | ((~hash->hh1) & hash->hh3);
+		*g = i;
+	}
+	else if (i < 32)
+	{
+		*f = (hash->hh3 & hash->hh1) | ((hash->hh2) & (~hash->hh3));
+		*g = (5 * i + 1) % 16;
+	}
+	else if (i < 48)
+	{
+		*f = hash->hh1 ^ hash->hh2 ^ hash->hh3;
+		*g = (3 * i + 5) % 16;
+	}
+	else if (i < 64)
+	{
+		*f = hash->hh2 ^ (hash->hh1 | (~hash->hh3));
+		*g = (7 * i) % 16;
+	}
 }
 
 void			md5_encrypt(t_md5 *hash, unsigned int *w)
 {
 	unsigned int f;
 	unsigned int g;
-	unsigned int i;
+	int i;
 	unsigned int tmp;
 
 	g = 0;
@@ -54,26 +57,7 @@ void			md5_encrypt(t_md5 *hash, unsigned int *w)
 	f = 0;
 	while (i < 64)
 	{
-		if (i < 16)
-		{
-			f = (hash->hh1 & hash->hh2) | ((~hash->hh1) & hash->hh3);
-			g = i;
-		}
-		else if (i < 32)
-		{
-			f = (hash->hh3 & hash->hh1) | ((hash->hh2) & (~hash->hh3));
-			g = (5 * i + 1) % 16;
-		}
-		else if (i < 48)
-		{
-			f = hash->hh1 ^ hash->hh2 ^ hash->hh3;
-			g = (3 * i + 5) % 16;
-		}
-		else if (i < 64)
-		{
-			f = hash->hh2 ^ (hash->hh1 | (~hash->hh3));
-			g = (7 * i) % 16;
-		}
+		md5_shifts(hash, &f, &g, i);
 		tmp = hash->hh3;
 		hash->hh3 = hash->hh2;
 		hash->hh2 = hash->hh1;
@@ -81,56 +65,39 @@ void			md5_encrypt(t_md5 *hash, unsigned int *w)
 		hash->hh0 = tmp;
 		i++;
 	}
-	update_hash_post(hash);
+	hash->h0 += hash->hh0;
+    hash->h1 += hash->hh1;
+    hash->h2 += hash->hh2;
+    hash->h3 += hash->hh3;
 }
 
 void md5_algo(char *to_hash, int len, t_md5 *hash)
 {
 	unsigned char *msg;
 	int newlen;
-	int offset;
-	unsigned int bitlen;
 	unsigned int *w;
 
-	bitlen = len * 8;
-	newlen = (bitlen + 1);
-	offset = 0;
-	w = 0;
+	newlen = (len + 1);
 	while (newlen%512 != 448)
 		newlen++;
 	newlen /= 8;
-	msg = ft_memalloc(newlen + 64);
+	if (!(msg = ft_memalloc(newlen + 64)))
+	{
+		ft_printf("MALLOC ERROR\n");
+		exit(EXIT_FAILURE);
+	}
 	ft_memcpy(msg, to_hash, len);
 	msg[len] = 128;
-	ft_memcpy(msg + newlen, &bitlen, 4);
-	while(offset < newlen)
+	ft_memcpy(msg + newlen, &len, 4);
+	len = 0;
+	while(len < newlen)
 	{
-		w = (unsigned int *)(msg + offset);
+		w = (unsigned int *)(msg + len);
      	update_hash_pre(hash);
 		md5_encrypt(hash, w);
-		offset += 64;
+		len += 64;
 	}
 	free(msg);
-}
-
-void		print_md5(char *to_hash)
-{
-	size_t		len;
-	t_md5		hash;
-	unsigned char *p;
-
-	hash = (t_md5){0, 0, 0, 0, 0, 0, 0, 0};
-	len = ft_strlen(to_hash);
-	init_hash(&hash);
-	md5_algo(to_hash, len, &hash);
-	p=(unsigned char *)&hash.h0;
-	ft_printf("%2.2x%2.2x%2.2x%2.2x", p[0], p[1], p[2], p[3]);
-    p=(unsigned char *)&hash.h1;
-	ft_printf("%2.2x%2.2x%2.2x%2.2x", p[0], p[1], p[2], p[3]);
-    p=(unsigned char *)&hash.h2;
-	ft_printf("%2.2x%2.2x%2.2x%2.2x", p[0], p[1], p[2], p[3]);
-    p=(unsigned char *)&hash.h3;
-    ft_printf("%2.2x%2.2x%2.2x%2.2x", p[0], p[1], p[2], p[3]);
 }
 
 void		prompt_md5(char *to_hash __attribute__((unused)), int8_t *flags __attribute__((unused)))
@@ -156,18 +123,18 @@ void		md5(char *to_hash, int8_t *flags __attribute__((unused)))
 {
 	if (flags['p'])
 	{
-		md5_p
+		md5_p(to_hash, flags);
 	}
 	if (flags['q'])
 	{
-		md5_q
+		md5_q(to_hash, flags);
 	}
 	else if (flags['r'])
 	{
-		md5_r
+		md5_r(to_hash, flags);
 	}
 	else
 	{
-		md5_noflag
+		md5_noflag(to_hash, flags);
 	}
 }

@@ -6,12 +6,12 @@
 /*   By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/08 12:34:59 by ggregoir          #+#    #+#             */
-/*   Updated: 2019/07/11 20:07:37 by ggregoir         ###   ########.fr       */
+/*   Updated: 2019/07/19 01:58:45 by ggregoir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef NPUZZLE_H
-# define NPUZZLE_H
+#ifndef FT_SSL_H
+# define FT_SSL_H
 
 # include "../libft/include/libft.h"
 #include <fcntl.h>
@@ -78,23 +78,50 @@ typedef struct	s_line
 }				t_line;
 
 
-
-char	**split_spaces(char *line)
-char	*ft_strjoin_and_free(char *s1, char *s2, char c, int at);
-int		get_next_line(const int fd, char **line);
-void	print_usage();
-void	print_usage_ssl();
-int		ft_ssl_error(char *command);
-void	illegal_option(char c);
-char	*argv_to_str(char **argv, int argc);
-char	*get_file(char *filename);
-char 	*read_fd(int fd);
-void	md5(char *to_hash, int8_t *flags);
-void	sha256(char *to_hash, int8_t *flags);
-void	prompt_md5(char *to_hash, int8_t *flags);
-void	prompt_sha256(char *to_hash, int8_t *flags);
-char	**str_split_space(char const *s);
-int		count_words(const char *str);
-int		flag_string_error();
+//functions_str.c
+char			**split_spaces(char *line);
+char			*ft_strjoin_and_free(char *s1, char *s2, char c, int at);
+//get_next_line.c
+int				get_next_line(const int fd, char **line);
+//error.c
+void			print_usage();
+void			print_usage_ssl();
+int				ft_ssl_error(char *command);
+void			illegal_option(char c);
+int				flag_string_error();
+//main.c
+char			*get_file(char *filename);
+char 			*read_fd(int fd);
+void			md5(char *to_hash, int8_t *flags);
+void			sha256(char *to_hash, int8_t *flags);
+void			prompt_md5(char *to_hash, int8_t *flags);
+void			prompt_sha256(char *to_hash, int8_t *flags);
+char			**str_split_space(char const *s);
+int				count_words(const char *str);
+//parsing.c
+int				parse_ssl_line(int8_t *flags, t_hash *hash, char **tab);
+//op.c
+unsigned int	rotate_right(unsigned int x, unsigned int c);
+unsigned int	rotate_left(unsigned int x, unsigned int c);
+unsigned int	swap_bytes_32bit(unsigned int val);
+//print_md5.c
+void			print_md5(char *to_hash);
+void			md5_p(char *to_hash, int8_t *flags);
+void			md5_q(char *to_hash, int8_t *flags);
+void			md5_r(char *to_hash, int8_t *flags);
+void			md5_noflag(char *to_hash, int8_t *flags);
+//tables.c
+void			init_hash_md5(t_md5 *hash);
+void			init_hash_sha256(t_sha256 *hash);
+//print_sha256.c
+void			print_sha256(char *to_hash);
+void			sha256_p(char *to_hash, int8_t *flags);
+void			sha256_q(char *to_hash, int8_t *flags);
+void			sha256_r(char *to_hash, int8_t *flags);
+void			sha256_noflag(char *to_hash, int8_t *flags);
+//md5.c
+void			md5_algo(char *to_hash, int len, t_md5 *hash);
+//sha256.c
+void			sha256_algo(char *to_hash, int len, t_sha256 *hash);
 
 #endif

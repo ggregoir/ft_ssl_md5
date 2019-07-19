@@ -6,7 +6,7 @@
 /*   By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/16 19:34:55 by ggregoir          #+#    #+#             */
-/*   Updated: 2019/07/08 23:06:48 by ggregoir         ###   ########.fr       */
+/*   Updated: 2019/07/19 01:50:33 by ggregoir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,3 +55,23 @@ const unsigned int g_round[64] =
 	0x5b9cca4f, 0x682e6ff3, 0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208,
 	0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
 };
+
+void		init_hash_md5(t_md5 *hash)
+{
+	hash->h0 = 0x67452301;
+	hash->h1 = 0xefcdab89;
+	hash->h2 = 0x98badcfe;
+	hash->h3 = 0x10325476;
+}
+
+void		init_hash_sha256(t_sha256 *hash)
+{
+	hash->h0 = 0x6a09e667;
+	hash->h1 = 0xbb67ae85;
+	hash->h2 = 0x3c6ef372;
+	hash->h3 = 0xa54ff53a;
+	hash->h4 = 0x510e527f;
+	hash->h5 = 0x9b05688c;
+	hash->h6 = 0x1f83d9ab;
+	hash->h7 = 0x5be0cd19;
+}

@@ -6,34 +6,11 @@
 /*   By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/05 23:14:36 by ggregoir          #+#    #+#             */
-/*   Updated: 2019/07/09 23:33:15 by ggregoir         ###   ########.fr       */
+/*   Updated: 2019/07/19 01:55:23 by ggregoir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ssl.h"
-
-unsigned int	rotate_right(unsigned int x, unsigned int c)
-{
-	return ((x >> c) | (x << (32 - c)));
-}
-
-unsigned int	swap_bytes_32bit(unsigned int val)
-{
-	val = ((val << 8) & 0xFF00FF00) | ((val >> 8) & 0xFF00FF);
-	return (val << 16) | (val >> 16);
-}
-
-static void		init_hash(t_sha256 *hash)
-{
-	hash->h0 = 0x6a09e667;
-	hash->h1 = 0xbb67ae85;
-	hash->h2 = 0x3c6ef372;
-	hash->h3 = 0xa54ff53a;
-	hash->h4 = 0x510e527f;
-	hash->h5 = 0x9b05688c;
-	hash->h6 = 0x1f83d9ab;
-	hash->h7 = 0x5be0cd19;
-}
 
 static void		update_hash_pre(t_sha256 *hash)
 {
@@ -64,36 +41,6 @@ void			sha256_encrypt(t_sha256 *hash, unsigned int *w)
 	unsigned int i;
 
 	i = 0;
-	/*while (i < 64)
-	{
-		if (i < 16)
-		{
-			f = (hash->hh1 & hash->hh2) | ((~hash->hh1) & hash->hh3);
-			g = i;
-		}
-		else if (i < 32)
-		{
-			f = (hash->hh3 & hash->hh1) | ((hash->hh2) & (~hash->hh3));
-			g = (5 * i + 1) % 16;
-		}
-		else if (i < 48)
-		{
-			f = hash->hh1 ^ hash->hh2 ^ hash->hh3;
-			g = (3 * i + 5) % 16;
-		}
-		else if (i < 64)
-		{
-			f = hash->hh2 ^ (hash->hh1 | (~hash->hh3));
-			g = (7 * i) % 16;
-		}
-		tmp = hash->hh3;
-		hash->hh3 = hash->hh2;
-		hash->hh2 = hash->hh1;
-		hash->hh1 = hash->hh1 + rotate_left(hash->hh0 + f + g_sine[i] + w[g], g_shifts[i]);
-		hash->hh0 = tmp;
-		i++;
-	}*/
-
 	while (i < 64)
 	{
 		hash->t1 = rotate_right(hash->hh4, 6) ^ rotate_right(hash->hh4, 11)
@@ -114,29 +61,6 @@ void			sha256_encrypt(t_sha256 *hash, unsigned int *w)
 		hash->hh0 = hash->tmp1 + hash->tmp2;
 		i++;
 	}
-
-	/*
-	while (i < 64)
-	{
-		m->t1 = right_rotate(m->e, 6) ^ right_rotate(m->e, 11)
-			^ right_rotate(m->e, 25);
-		m->ch = (m->e & m->f) ^ (~m->e & m->g);
-		m->temp1 = m->h + m->t1 + m->ch + g_cube[i] + m->w[i];
-		m->t0 = right_rotate(m->a, 2) ^ right_rotate(m->a, 13)
-			^ right_rotate(m->a, 22);
-		m->maj = (m->a & m->b) ^ (m->a & m->c) ^ (m->b & m->c);
-		m->temp2 = m->t0 + m->maj;
-		m->h = m->g;
-		m->g = m->f;
-		m->f = m->e;
-		m->e = m->d + m->temp1;
-		m->d = m->c;
-		m->c = m->b;
-		m->b = m->a;
-		m->a = m->temp1 + m->temp2;
-		i++;
-	}
-	*/
 	update_hash_post(hash);
 }
 
@@ -239,19 +163,6 @@ void sha256_algo(char *to_hash, int len, t_sha256 *hash)
 	free(msg);
 }
 
-void		print_sha256(char *to_hash)
-{
-	size_t		len;
-	t_sha256	h;
-
-	ft_bzero(&h, sizeof(h));
-	len = ft_strlen(to_hash);
-	init_hash(&h);
-	sha256_algo(to_hash, len, &h);
-	ft_printf("%.8x%.8x%.8x%.8x%.8x%.8x%.8x%.8x",h.h0,h.h1,h.h2,h.h3,
-		h.h4,h.h5,h.h6,h.h7);
-}
-
 void		prompt_sha256(char *to_hash __attribute__((unused)), int8_t *flags __attribute__((unused)))
 {
 	if (flags['p'])
@@ -273,66 +184,20 @@ void		prompt_sha256(char *to_hash __attribute__((unused)), int8_t *flags __attri
 
 void		sha256(char *to_hash, int8_t *flags __attribute__((unused)))
 {
-	char *filename;
-
 	if (flags['p'])
 	{
-		flags['p'] = 0;
-		filename = read_fd(0);
-		ft_printf("%s", filename);
-		print_sha256(filename);
-		write(1, "\n", 1);
+		sha256_p(to_hash, flags);
 	}
 	if (flags['q'])
 	{
-		if (flags['s'])
-		{
-			print_sha256(to_hash);
-			write(1, "\n", 1);
-		}
-		else
-		{
-			if ((to_hash = get_file(to_hash)) != NULL)
-			{
-				print_sha256(to_hash);
-				write(1, "\n", 1);
-			}
-		}
+		sha256_q(to_hash, flags);
 	}
 	else if (flags['r'])
 	{
-		if (flags['s'])
-		{
-			print_sha256(to_hash);
-			ft_printf(" \"%s\"\n", to_hash);
-		}
-		else
-		{
-			filename = to_hash;
-			if ((to_hash = get_file(to_hash)) != NULL)
-			{
-				print_sha256(to_hash);
-				ft_printf(" %s\n", filename);
-			}
-		}
+		sha256_r(to_hash, flags);
 	}
 	else
 	{
-		if (flags['s'])
-		{
-			ft_printf("SHA256(\"%s\")= ", to_hash);
-			print_sha256(to_hash);
-			ft_printf("\n");
-		}
-		else
-		{
-			filename = to_hash;
-			if ((to_hash = get_file(to_hash)) != NULL)
-			{
-					ft_printf("SHA256(%s)= ", filename);
-					print_sha256(to_hash);
-					ft_printf("\n");
-			}
-		}
+		sha256_noflag(to_hash, flags);
 	}
 }

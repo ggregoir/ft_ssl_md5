@@ -6,13 +6,13 @@
 /*   By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/10 15:27:11 by ggregoir          #+#    #+#             */
-/*   Updated: 2019/07/12 01:25:11 by ggregoir         ###   ########.fr       */
+/*   Updated: 2019/07/18 20:34:00 by ggregoir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ssl.h"
 
-int	handle_flags(char *command, int8_t *flags)
+int		handle_flags(char *command, int8_t *flags)
 {
 	int i;
 
@@ -36,7 +36,7 @@ int	handle_flags(char *command, int8_t *flags)
 	}
 }
 
-void do_hash(char *to_hash, int8_t *flags, 	uint8_t current)
+void	do_hash(char *to_hash, int8_t *flags, 	uint8_t current)
 {
 	static void	(*eval[4])(char *, int8_t *) = {md5, prompt_md5, sha256, prompt_sha256};
 	eval[current - 1](to_hash, flags);
@@ -76,4 +76,30 @@ int		handle_args(int8_t *flags, t_hash *hash, int *i, char **tab)
 		do_hash(tab[*i], flags, hash->md5 + hash->sha256 + hash->prompt);
 	}
 	return(1);
+}
+
+int		parse_ssl_line(int8_t *flags, t_hash *hash, char **tab)
+{
+	int i;
+
+	i = -1;
+	hash->prompt = 1;
+	while (tab[++i])
+	{
+		if (!hash->md5 && !hash->sha256)
+		{
+			if (!handle_hash(hash, tab[i]))
+				return (0);
+		}
+		else
+		{
+			if (!handle_args(flags, hash, &i, tab))
+				return (0);
+		}
+	}
+	if (flags['s'])
+		return (flag_string_error());
+	if (hash->prompt == 1)
+		do_hash(tab[i], flags, hash->md5 + hash->sha256 + hash->prompt);
+	return (1);
 }

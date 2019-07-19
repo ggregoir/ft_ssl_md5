@@ -1,72 +1,66 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   md5_print.c                                        :+:      :+:    :+:   */
+/*   print_sha256.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/07/15 22:45:10 by ggregoir          #+#    #+#             */
-/*   Updated: 2019/07/16 02:04:58 by ggregoir         ###   ########.fr       */
+/*   Created: 2019/07/16 22:33:18 by ggregoir          #+#    #+#             */
+/*   Updated: 2019/07/19 01:59:59 by ggregoir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ssl.h"
 
-void		print_md5(char *to_hash)
+void		print_sha256(char *to_hash)
 {
 	size_t		len;
-	t_md5		hash;
-	unsigned char *p;
+	t_sha256	h;
 
-	hash = (t_md5){0, 0, 0, 0, 0, 0, 0, 0};
+	ft_bzero(&h, sizeof(h));
 	len = ft_strlen(to_hash);
-	init_hash(&hash);
-	md5_algo(to_hash, len, &hash);
-	p=(unsigned char *)&hash.h0;
-	ft_printf("%2.2x%2.2x%2.2x%2.2x", p[0], p[1], p[2], p[3]);
-    p=(unsigned char *)&hash.h1;
-	ft_printf("%2.2x%2.2x%2.2x%2.2x", p[0], p[1], p[2], p[3]);
-    p=(unsigned char *)&hash.h2;
-	ft_printf("%2.2x%2.2x%2.2x%2.2x", p[0], p[1], p[2], p[3]);
-    p=(unsigned char *)&hash.h3;
-    ft_printf("%2.2x%2.2x%2.2x%2.2x", p[0], p[1], p[2], p[3]);
+	init_hash_sha256(&h);
+	sha256_algo(to_hash, len, &h);
+	ft_printf("%.8x%.8x%.8x%.8x%.8x%.8x%.8x%.8x",h.h0,h.h1,h.h2,h.h3,
+		h.h4,h.h5,h.h6,h.h7);
 }
 
-void		md5_p(char *to_hash, int8_t *flags)
+void		sha256_p(char *to_hash, int8_t *flags)
 {
 	char *filename;
 
+	to_hash = 0;
 	flags['p'] = 0;
 	filename = read_fd(0);
 	ft_printf("%s", filename);
-	print_md5(filename);
+	print_sha256(filename);
 	write(1, "\n", 1);
 }
 
-void		md5_q(char *to_hash, int8_t *flags)
+void		sha256_q(char *to_hash, int8_t *flags)
 {
 	if (flags['s'])
 	{
-		print_md5(to_hash);
+		print_sha256(to_hash);
 		write(1, "\n", 1);
 	}
 	else
 	{
 		if ((to_hash = get_file(to_hash)) != NULL)
 		{
-			print_md5(to_hash);
+			print_sha256(to_hash);
 			write(1, "\n", 1);
 		}
 	}
 }
 
-void		md5_r(char *to_hash, int8_t *flags)
+void		sha256_r(char *to_hash, int8_t *flags)
 {
 	char *filename;
 
 	if (flags['s'])
 	{
-		print_md5(to_hash);
+		print_sha256(to_hash);
 		ft_printf(" \"%s\"\n", to_hash);
 	}
 	else
@@ -74,20 +68,20 @@ void		md5_r(char *to_hash, int8_t *flags)
 		filename = to_hash;
 		if ((to_hash = get_file(to_hash)) != NULL)
 		{
-			print_md5(to_hash);
+			print_sha256(to_hash);
 			ft_printf(" %s\n", filename);
 		}
 	}
 }
 
-void		md5_noflag(char *to_hash, int8_t *flags)
+void		sha256_noflag(char *to_hash, int8_t *flags)
 {
 	char *filename;
 
 	if (flags['s'])
 	{
-		ft_printf("MD5 (\"%s\") = ", to_hash);
-		print_md5(to_hash);
+		ft_printf("SHA256(\"%s\")= ", to_hash);
+		print_sha256(to_hash);
 		ft_printf("\n");
 	}
 	else
@@ -95,8 +89,8 @@ void		md5_noflag(char *to_hash, int8_t *flags)
 		filename = to_hash;
 		if ((to_hash = get_file(to_hash)) != NULL)
 		{
-				ft_printf("MD5 (%s) = ", filename);
-				print_md5(to_hash);
+				ft_printf("SHA256(%s)= ", filename);
+				print_sha256(to_hash);
 				ft_printf("\n");
 		}
 	}
