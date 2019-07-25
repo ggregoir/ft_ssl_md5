@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_getline.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jafaghpo <jafaghpo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/09 18:58:05 by jafaghpo          #+#    #+#             */
-/*   Updated: 2019/06/09 18:58:05 by jafaghpo         ###   ########.fr       */
+/*   Updated: 2019/07/25 19:46:42 by ggregoir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ static int	check_buffer(char **line, t_file *file, int size)
 
 static int	ifnewline(char **line, t_file *file, int size_line, int size)
 {
-	if (!(*line = realloc(*line, size_line + size + 1)))
+	if (!(*line = ft_realloc(*line, size_line + size + 1)))
 		return (-1);
 	ft_memcpy(*line + size_line, file->buf, size);
 	(*line)[size_line + size] = '\0';
@@ -72,7 +72,7 @@ static int	search_newline(char **line, t_file *file, int size)
 			size = tmp - file->buf;
 			return (ifnewline(line, file, size_line, size));
 		}
-		if (!(*line = realloc(*line, size_line + BUFF_SIZE + 1)))
+		if (!(*line = ft_realloc(*line, size_line + BUFF_SIZE + 1)))
 			return (-1);
 		ft_memcpy(*line + size_line, file->buf, BUFF_SIZE);
 		size_line += BUFF_SIZE;
