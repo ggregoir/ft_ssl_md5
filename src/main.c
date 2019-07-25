@@ -6,7 +6,7 @@
 /*   By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/08 12:31:33 by ggregoir          #+#    #+#             */
-/*   Updated: 2019/07/18 20:36:03 by ggregoir         ###   ########.fr       */
+/*   Updated: 2019/07/25 17:08:22 by ggregoir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,5 +93,5 @@ int		main(int argc, char **argv)
 	}
 	else if (!parse_ssl_line(flags, &hash, argv))
 		print_usage_ssl();
-	return 0;
+	return (0);
 }

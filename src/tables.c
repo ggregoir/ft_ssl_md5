@@ -6,13 +6,13 @@
 /*   By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/16 19:34:55 by ggregoir          #+#    #+#             */
-/*   Updated: 2019/07/19 01:50:33 by ggregoir         ###   ########.fr       */
+/*   Updated: 2019/07/25 17:14:06 by ggregoir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ssl.h"
 
-const unsigned int g_shifts[64] =
+const uint32_t g_shifts[64] =
 {
 	7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22, 7,
 	12, 17, 22, 5, 9, 14, 20, 5, 9, 14, 20, 5, 9, 14, 20, 5,
@@ -21,7 +21,7 @@ const unsigned int g_shifts[64] =
 	10, 15, 21
 };
 
-const unsigned int g_sine[64] =
+const uint32_t g_sine[64] =
 {
 	0xd76aa478, 0xe8c7b756, 0x242070db, 0xc1bdceee,
 	0xf57c0faf, 0x4787c62a, 0xa8304613, 0xfd469501,
@@ -41,7 +41,7 @@ const unsigned int g_sine[64] =
 	0xf7537e82, 0xbd3af235, 0x2ad7d2bb, 0xeb86d391
 };
 
-const unsigned int g_round[64] =
+const uint32_t g_round[64] =
 {
 	0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1,
 	0x923f82a4, 0xab1c5ed5, 0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3,
