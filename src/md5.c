@@ -6,7 +6,7 @@
 /*   By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/04 20:25:01 by ggregoir          #+#    #+#             */
-/*   Updated: 2019/07/25 18:47:46 by ggregoir         ###   ########.fr       */
+/*   Updated: 2019/07/29 02:33:08 by ggregoir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ void			prompt_md5(char *to_hash, int8_t *flags)
 		to_hash = read_fd(0);
 		print_md5(to_hash);
 		ft_printf("\n");
+		ft_memdel((void**)&to_hash);
 		exit(EXIT_SUCCESS);
 	}
 }

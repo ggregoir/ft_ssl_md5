@@ -6,7 +6,7 @@
 /*   By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/08 13:01:45 by ggregoir          #+#    #+#             */
-/*   Updated: 2019/07/25 17:07:24 by ggregoir         ###   ########.fr       */
+/*   Updated: 2019/07/29 02:28:09 by ggregoir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,11 +49,29 @@ char			*ft_strjoin_and_free(char *s1, char *s2, char c, int at)
 	return (ret);
 }
 
+void			free_tab(char **tab)
+{
+	int i;
+
+	i = 0;
+	while (tab[i])
+	{
+		ft_memdel((void**)&tab[i]);
+		i++;
+	}
+	free(tab);
+	tab = NULL;
+}
+
 char			**split_spaces(char *line)
 {
 	char **tab;
+	char *tmp;
 
 	tab = ft_strsplit(line, '	');
-	tab = ft_strsplit(implode(tab, ' '), ' ');
+	tmp = implode(tab, ' ');
+	free_tab(tab);
+	tab = ft_strsplit(tmp, ' ');
+	free(tmp);
 	return (tab);
 }

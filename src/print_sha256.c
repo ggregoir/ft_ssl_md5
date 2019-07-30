@@ -6,7 +6,7 @@
 /*   By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/16 22:33:18 by ggregoir          #+#    #+#             */
-/*   Updated: 2019/07/25 19:31:18 by ggregoir         ###   ########.fr       */
+/*   Updated: 2019/07/30 21:25:21 by ggregoir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ void		sha256_q(char *to_hash, int8_t *flags)
 		{
 			print_sha256(to_hash);
 			write(1, "\n", 1);
+			free(to_hash);
 		}
 	}
 }
@@ -70,6 +71,7 @@ void		sha256_r(char *to_hash, int8_t *flags)
 		{
 			print_sha256(to_hash);
 			ft_printf(" %s\n", filename);
+			free(to_hash);
 		}
 	}
 }
@@ -92,6 +94,7 @@ void		sha256_noflag(char *to_hash, int8_t *flags)
 			ft_printf("SHA256(%s)= ", filename);
 			print_sha256(to_hash);
 			ft_printf("\n");
+			free(to_hash);
 		}
 	}
 }

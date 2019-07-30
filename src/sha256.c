@@ -6,7 +6,7 @@
 /*   By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/05 23:14:36 by ggregoir          #+#    #+#             */
-/*   Updated: 2019/07/25 19:35:37 by ggregoir         ###   ########.fr       */
+/*   Updated: 2019/07/29 02:36:35 by ggregoir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ void		prompt_sha256(char *to_hash, int8_t *flags)
 		to_hash = read_fd(0);
 		print_sha256(to_hash);
 		ft_printf("\n");
+		ft_memdel((void**)&to_hash);
 		exit(EXIT_SUCCESS);
 	}
 }

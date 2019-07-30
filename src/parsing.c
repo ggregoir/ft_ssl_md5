@@ -6,7 +6,7 @@
 /*   By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/10 15:27:11 by ggregoir          #+#    #+#             */
-/*   Updated: 2019/07/25 17:11:05 by ggregoir         ###   ########.fr       */
+/*   Updated: 2019/07/30 23:10:04 by ggregoir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,8 @@ int		parse_ssl_line(int8_t *flags, t_hash *hash, char **tab)
 
 	i = -1;
 	hash->prompt = 1;
+	if (!tab[0])
+		return (1);
 	while (tab[++i])
 	{
 		if (!hash->md5 && !hash->sha256)

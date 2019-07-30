@@ -6,7 +6,7 @@
 /*   By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/15 22:45:10 by ggregoir          #+#    #+#             */
-/*   Updated: 2019/07/25 17:12:34 by ggregoir         ###   ########.fr       */
+/*   Updated: 2019/07/30 21:25:06 by ggregoir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ void		md5_q(char *to_hash, int8_t *flags)
 		{
 			print_md5(to_hash);
 			write(1, "\n", 1);
+			free(to_hash);
 		}
 	}
 }
@@ -77,6 +78,7 @@ void		md5_r(char *to_hash, int8_t *flags)
 		{
 			print_md5(to_hash);
 			ft_printf(" %s\n", filename);
+			free(to_hash);
 		}
 	}
 }
@@ -99,6 +101,7 @@ void		md5_noflag(char *to_hash, int8_t *flags)
 			ft_printf("MD5 (%s) = ", filename);
 			print_md5(to_hash);
 			ft_printf("\n");
+			free(to_hash);
 		}
 	}
 }

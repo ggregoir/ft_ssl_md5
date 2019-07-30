@@ -6,7 +6,7 @@
 /*   By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/08 12:34:59 by ggregoir          #+#    #+#             */
-/*   Updated: 2019/07/25 19:42:05 by ggregoir         ###   ########.fr       */
+/*   Updated: 2019/07/29 02:05:01 by ggregoir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ typedef struct	s_line
 */
 char			**split_spaces(char *line);
 char			*ft_strjoin_and_free(char *s1, char *s2, char c, int at);
+void			free_tab(char **tab);
 /*
 ** get_next_line.c
 */
