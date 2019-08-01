@@ -6,7 +6,7 @@
 /*   By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/15 22:45:10 by ggregoir          #+#    #+#             */
-/*   Updated: 2019/07/30 21:25:06 by ggregoir         ###   ########.fr       */
+/*   Updated: 2019/08/02 00:39:09 by ggregoir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,10 @@ void		print_md5(char *to_hash)
 	unsigned char	*p;
 
 	hash = (t_md5){0, 0, 0, 0, 0, 0, 0, 0};
-	len = ft_strlen(to_hash);
+	if (to_hash == 0)
+		len = 0;
+	else
+		len = ft_strlen(to_hash);
 	init_hash_md5(&hash);
 	md5_algo(to_hash, len * 8, &hash);
 	p = (unsigned char *)&hash.h0;
@@ -46,6 +49,8 @@ void		md5_p(char *to_hash, int8_t *flags)
 
 void		md5_q(char *to_hash, int8_t *flags)
 {
+	int fd;
+
 	if (flags['s'])
 	{
 		print_md5(to_hash);
@@ -53,8 +58,9 @@ void		md5_q(char *to_hash, int8_t *flags)
 	}
 	else
 	{
-		if ((to_hash = get_file(to_hash)) != NULL)
+		if ((fd = get_file(to_hash)) != -1)
 		{
+			to_hash = read_fd(fd);
 			print_md5(to_hash);
 			write(1, "\n", 1);
 			free(to_hash);
@@ -64,7 +70,8 @@ void		md5_q(char *to_hash, int8_t *flags)
 
 void		md5_r(char *to_hash, int8_t *flags)
 {
-	char *filename;
+	int		fd;
+	char	*filename;
 
 	if (flags['s'])
 	{
@@ -74,9 +81,9 @@ void		md5_r(char *to_hash, int8_t *flags)
 	else
 	{
 		filename = to_hash;
-		if ((to_hash = get_file(to_hash)) != NULL)
+		if ((fd = get_file(to_hash)) != -1)
 		{
-			print_md5(to_hash);
+			to_hash = read_fd(fd);
 			ft_printf(" %s\n", filename);
 			free(to_hash);
 		}
@@ -85,7 +92,8 @@ void		md5_r(char *to_hash, int8_t *flags)
 
 void		md5_noflag(char *to_hash, int8_t *flags)
 {
-	char *filename;
+	int		fd;
+	char	*filename;
 
 	if (flags['s'])
 	{
@@ -96,8 +104,9 @@ void		md5_noflag(char *to_hash, int8_t *flags)
 	else
 	{
 		filename = to_hash;
-		if ((to_hash = get_file(to_hash)) != NULL)
+		if ((fd = get_file(to_hash)) != -1)
 		{
+			to_hash = read_fd(fd);
 			ft_printf("MD5 (%s) = ", filename);
 			print_md5(to_hash);
 			ft_printf("\n");

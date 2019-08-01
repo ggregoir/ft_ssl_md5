@@ -6,22 +6,22 @@
 /*   By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/08 12:31:33 by ggregoir          #+#    #+#             */
-/*   Updated: 2019/07/30 20:18:31 by ggregoir         ###   ########.fr       */
+/*   Updated: 2019/08/01 23:43:33 by ggregoir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ssl.h"
 
-char	*get_file(char *filename)
+int		get_file(char *filename)
 {
 	int fd;
 
 	if ((fd = open(filename, O_RDONLY)) == -1)
 	{
 		ft_dprintf(2, "%s: No such file or directory\n", filename);
-		return (NULL);
+		return (-1);
 	}
-	return (read_fd(fd));
+	return (fd);
 }
 
 char	*read_fd(int fd)

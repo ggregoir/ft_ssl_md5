@@ -6,7 +6,7 @@
 /*   By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/08 12:34:59 by ggregoir          #+#    #+#             */
-/*   Updated: 2019/07/29 02:05:01 by ggregoir         ###   ########.fr       */
+/*   Updated: 2019/08/01 23:43:23 by ggregoir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ int				flag_string_error(void);
 /*
 ** main.c
 */
-char			*get_file(char *filename);
+int				get_file(char *filename);
 char			*read_fd(int fd);
 void			md5(char *to_hash, int8_t *flags);
 void			sha256(char *to_hash, int8_t *flags);
