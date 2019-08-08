@@ -6,7 +6,7 @@
 /*   By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/05 23:14:36 by ggregoir          #+#    #+#             */
-/*   Updated: 2019/07/29 02:36:35 by ggregoir         ###   ########.fr       */
+/*   Updated: 2019/08/08 22:29:50 by ggregoir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,18 +89,18 @@ void		sha256(char *to_hash, int8_t *flags)
 {
 	if (flags['p'])
 	{
-		sha256_p(to_hash, flags);
+		print_p(to_hash, flags, "SHA256");
 	}
 	if (flags['q'])
 	{
-		sha256_q(to_hash, flags);
+		print_q(to_hash, flags, "SHA256");
 	}
 	else if (flags['r'])
 	{
-		sha256_r(to_hash, flags);
+		print_r(to_hash, flags, "SHA256");
 	}
 	else
 	{
-		sha256_noflag(to_hash, flags);
+		print_noflag(to_hash, flags, "SHA256");
 	}
 }

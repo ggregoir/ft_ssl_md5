@@ -1,0 +1,1 @@
+./ft_ssl sha256 -r $@ > my.txt && shasum -a 256 $@ > real.txt && diff my.txt real.txt 

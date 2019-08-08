@@ -6,7 +6,7 @@
 /*   By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/04 20:25:01 by ggregoir          #+#    #+#             */
-/*   Updated: 2019/07/29 02:33:08 by ggregoir         ###   ########.fr       */
+/*   Updated: 2019/08/06 22:07:39 by ggregoir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,18 +36,18 @@ void			md5(char *to_hash, int8_t *flags)
 {
 	if (flags['p'])
 	{
-		md5_p(to_hash, flags);
+		print_p(to_hash, flags, "MD5");
 	}
 	if (flags['q'])
 	{
-		md5_q(to_hash, flags);
+		print_q(to_hash, flags, "MD5");
 	}
 	else if (flags['r'])
 	{
-		md5_r(to_hash, flags);
+		print_r(to_hash, flags, "MD5");
 	}
 	else
 	{
-		md5_noflag(to_hash, flags);
+		print_noflag(to_hash, flags, "MD5");
 	}
 }

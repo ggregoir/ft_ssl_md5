@@ -6,7 +6,7 @@
 #    By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/05/08 12:30:55 by ggregoir          #+#    #+#              #
-#    Updated: 2019/07/25 18:48:23 by ggregoir         ###   ########.fr        #
+#    Updated: 2019/08/06 23:54:50 by ggregoir         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,7 @@ endif
 
 SRCS		=	main.c functions_str.c get_next_line.c error.c parsing.c \
 				md5.c sha256.c tables.c op.c print_md5.c print_sha256.c  \
-				algo_md5.c algo_sha256.c
+				algo_md5.c algo_sha256.c print_flags.c
 SRC			=	$(addprefix src/, $(SRCS))
 OBJ			=	$(addprefix obj/, $(SRCS:.c=.o))
 INCL_DIR	=	include

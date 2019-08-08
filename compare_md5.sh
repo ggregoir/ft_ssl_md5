@@ -1,0 +1,1 @@
+./ft_ssl md5 $@ > my.txt && md5 $@ > real.txt && diff my.txt real.txt 

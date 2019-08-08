@@ -6,7 +6,7 @@
 /*   By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/08 12:34:59 by ggregoir          #+#    #+#             */
-/*   Updated: 2019/08/01 23:43:23 by ggregoir         ###   ########.fr       */
+/*   Updated: 2019/08/06 23:58:23 by ggregoir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,10 +119,13 @@ uint32_t		swap_bytes_32bit(uint32_t val);
 ** print_md5.c
 */
 void			print_md5(char *to_hash);
-void			md5_p(char *to_hash, int8_t *flags);
-void			md5_q(char *to_hash, int8_t *flags);
-void			md5_r(char *to_hash, int8_t *flags);
-void			md5_noflag(char *to_hash, int8_t *flags);
+/*
+** print_flags.c
+*/
+void			print_p(char *to_hash, int8_t *flags, char *hash);
+void			print_q(char *to_hash, int8_t *flags, char *hash);
+void			print_r(char *to_hash, int8_t *flags, char *hash);
+void			print_noflag(char *to_hash, int8_t *flags, char *hash);
 /*
 ** tables.c
 */
@@ -132,10 +135,6 @@ void			init_hash_sha256(t_sha256 *hash);
 ** print_sha256.c
 */
 void			print_sha256(char *to_hash);
-void			sha256_p(char *to_hash, int8_t *flags);
-void			sha256_q(char *to_hash, int8_t *flags);
-void			sha256_r(char *to_hash, int8_t *flags);
-void			sha256_noflag(char *to_hash, int8_t *flags);
 /*
 ** md5.c
 */
