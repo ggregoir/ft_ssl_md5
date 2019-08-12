@@ -6,7 +6,7 @@
 /*   By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/10 17:55:58 by ggregoir          #+#    #+#             */
-/*   Updated: 2019/07/25 16:54:21 by ggregoir         ###   ########.fr       */
+/*   Updated: 2019/08/12 21:18:38 by ggregoir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static void	print_usage(void)
 {
-	ft_dprintf(2, "usage: ft_ssl command [command opts] [command args]\n");
+	ft_dprintf(2, "usage: [md5|sha256] [-pqr] [-s string] [files ...]\n");
 }
 
 void		print_usage_ssl(void)

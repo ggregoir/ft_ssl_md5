@@ -6,7 +6,7 @@
 /*   By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/03 20:09:16 by ggregoir          #+#    #+#             */
-/*   Updated: 2019/08/08 22:29:42 by ggregoir         ###   ########.fr       */
+/*   Updated: 2019/08/12 22:42:27 by ggregoir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ void		print_r(char *to_hash, int8_t *flags, char *hash)
 {
 	int		fd;
 	char	*filename;
+
 	if (flags['s'])
 	{
 		print_hash(to_hash, hash);
