@@ -6,15 +6,14 @@
 /*   By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/16 22:33:18 by ggregoir          #+#    #+#             */
-/*   Updated: 2019/08/03 22:45:57 by ggregoir         ###   ########.fr       */
+/*   Updated: 2019/09/17 22:07:43 by ggregoir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ssl.h"
 
-void		print_sha256(char *to_hash)
+void		print_sha256(char *to_hash, size_t len)
 {
-	uint32_t	len;
 	t_sha256	h;
 
 	ft_bzero(&h, sizeof(h));

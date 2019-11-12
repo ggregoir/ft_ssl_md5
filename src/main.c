@@ -6,7 +6,7 @@
 /*   By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/08 12:31:33 by ggregoir          #+#    #+#             */
-/*   Updated: 2019/08/01 23:43:33 by ggregoir         ###   ########.fr       */
+/*   Updated: 2019/09/17 22:48:43 by ggregoir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,22 +24,21 @@ int		get_file(char *filename)
 	return (fd);
 }
 
-char	*read_fd(int fd)
+char	*read_fd(int fd, size_t *len)
 {
 	char	buff[100001];
-	int		count;
 	char	*ret;
 
-	count = 0;
+	len = 0;
 	ret = NULL;
-	while ((count = read(fd, buff, 100000)) >= 0)
+	while ((len = read(fd, buff, 100000)) >= 0)
 	{
-		if (count == 0)
+		if (len == 0)
 			return (ret);
-		buff[count] = '\0';
+		buff[len] = '\0';
 		if (!ret)
 		{
-			if (!(ret = ft_strnew(count)))
+			if (!(ret = ft_strnew(len)))
 				return (NULL);
 		}
 		if ((ret = ft_strjoin_free(ret, buff, 'L')) == NULL)
