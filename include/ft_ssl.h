@@ -6,7 +6,7 @@
 /*   By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/08 12:34:59 by ggregoir          #+#    #+#             */
-/*   Updated: 2019/08/06 23:58:23 by ggregoir         ###   ########.fr       */
+/*   Updated: 2019/11/21 18:31:29 by ggregoir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ int				flag_string_error(void);
 ** main.c
 */
 int				get_file(char *filename);
-char			*read_fd(int fd);
+char			*read_fd(int fd, size_t *len);
 void			md5(char *to_hash, int8_t *flags);
 void			sha256(char *to_hash, int8_t *flags);
 void			prompt_md5(char *to_hash, int8_t *flags);
@@ -118,7 +118,7 @@ uint32_t		swap_bytes_32bit(uint32_t val);
 /*
 ** print_md5.c
 */
-void			print_md5(char *to_hash);
+void			print_md5(char *to_hash, size_t len);
 /*
 ** print_flags.c
 */
@@ -134,7 +134,7 @@ void			init_hash_sha256(t_sha256 *hash);
 /*
 ** print_sha256.c
 */
-void			print_sha256(char *to_hash);
+void			print_sha256(char *to_hash, size_t len);
 /*
 ** md5.c
 */

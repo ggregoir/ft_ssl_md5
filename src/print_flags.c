@@ -6,7 +6,7 @@
 /*   By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/03 20:09:16 by ggregoir          #+#    #+#             */
-/*   Updated: 2019/09/17 23:00:43 by ggregoir         ###   ########.fr       */
+/*   Updated: 2019/11/22 16:34:33 by ggregoir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void		print_q(char *to_hash, int8_t *flags, char *hash)
 		if ((fd = get_file(to_hash)) != -1)
 		{
 			to_hash = read_fd(fd, &len);
-			print_hash(to_hash, hash);
+			print_hash(to_hash, hash, len);
 			write(1, "\n", 1);
 			free(to_hash);
 		}
@@ -76,7 +76,7 @@ void		print_r(char *to_hash, int8_t *flags, char *hash)
 		if ((fd = get_file(to_hash)) != -1)
 		{
 			to_hash = read_fd(fd, &len);
-			print_hash(to_hash, hash);
+			print_hash(to_hash, hash, len);
 			ft_printf(" %s\n", filename);
 			free(to_hash);
 		}
