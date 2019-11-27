@@ -6,7 +6,7 @@
 /*   By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/04 20:25:01 by ggregoir          #+#    #+#             */
-/*   Updated: 2019/11/21 18:30:40 by ggregoir         ###   ########.fr       */
+/*   Updated: 2019/11/27 22:31:58 by ggregoir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,12 @@
 void			prompt_md5(char *to_hash, int8_t *flags)
 {
 	size_t len;
+
 	if (flags['p'])
 	{
 		flags['p'] = 0;
 		to_hash = read_fd(0, &len);
-		ft_printf("%s", to_hash);
+		write(1, to_hash, len);
 		print_md5(to_hash, len);
 		write(1, "\n", 1);
 	}

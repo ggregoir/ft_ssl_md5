@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    printf.mk                                          :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: jafaghpo <jafaghpo@student.42.fr>          +#+  +:+       +#+         #
+#    By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2019/06/09 19:06:01 by jafaghpo          #+#    #+#              #
-#    Updated: 2019/06/09 19:06:01 by jafaghpo         ###   ########.fr        #
+#    Created: 2019/06/09 19:06:01 by ggregoir          #+#    #+#              #
+#    Updated: 2019/06/09 19:06:01 by ggregoir         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 

@@ -6,7 +6,7 @@
 /*   By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/08 12:31:33 by ggregoir          #+#    #+#             */
-/*   Updated: 2019/11/22 16:32:05 by ggregoir         ###   ########.fr       */
+/*   Updated: 2019/11/27 23:36:27 by ggregoir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,15 +36,17 @@ char	*read_fd(int fd, size_t *len)
 	{
 		*len += count;
 		if (count == 0)
+		{
 			return (ret);
+		}
 		buff[count] = '\0';
 		if (!ret)
 		{
 			if (!(ret = ft_strnew(count)))
 				return (NULL);
 		}
-		if ((ret = ft_strjoin_free(ret, buff, 'L')) == NULL)
-			return (NULL);
+		ret = ft_realloc(ret, *len);
+		ft_strncpy(ret + *len - count, buff, count);
 	}
 	return (NULL);
 }

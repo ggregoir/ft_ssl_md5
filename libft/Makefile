@@ -3,22 +3,16 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: jafaghpo <jafaghpo@student.42.fr>          +#+  +:+       +#+         #
+#    By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2019/06/09 19:06:55 by jafaghpo          #+#    #+#              #
-#    Updated: 2019/06/12 19:46:12 by jafaghpo         ###   ########.fr        #
+#    Created: 2019/06/09 19:06:55 by ggregoir          #+#    #+#              #
+#    Updated: 2019/11/27 23:15:24 by ggregoir         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME			=	libft.a
 CC				=	gcc
 CFLAGS			=	-Wall -Wextra -Werror
-
-ifeq ($(DEBUG), yes)
-	CFLAGS		+=	-g
-else
-	CFLAGS		+=	-Ofast
-endif
 
 OBJ_PATH		=	obj
 SRC_PATH		=	src

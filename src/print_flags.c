@@ -6,7 +6,7 @@
 /*   By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/03 20:09:16 by ggregoir          #+#    #+#             */
-/*   Updated: 2019/11/22 16:34:33 by ggregoir         ###   ########.fr       */
+/*   Updated: 2019/11/27 23:40:42 by ggregoir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,20 +26,20 @@ static void	print_hash(char *to_hash, char *hash, size_t len)
 
 void		print_p(char *to_hash, int8_t *flags, char *hash)
 {
-	char *filename;
+	char	*filename;
 	size_t	len;
 
 	to_hash = 0;
 	flags['p'] = 0;
 	filename = read_fd(0, &len);
-	ft_printf("%s", filename);
+	write(1, filename, len);
 	print_hash(filename, hash, len);
 	write(1, "\n", 1);
 }
 
 void		print_q(char *to_hash, int8_t *flags, char *hash)
 {
-	int fd;
+	int		fd;
 	size_t	len;
 
 	if (flags['s'])
@@ -92,7 +92,6 @@ void		print_noflag(char *to_hash, int8_t *flags, char *hash)
 	if (flags['s'])
 	{
 		ft_printf("%s (\"%s\") = ", hash, to_hash);
-
 		print_hash(to_hash, hash, ft_strlen(to_hash));
 		ft_printf("\n");
 	}

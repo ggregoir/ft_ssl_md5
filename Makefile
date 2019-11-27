@@ -6,7 +6,7 @@
 #    By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/05/08 12:30:55 by ggregoir          #+#    #+#              #
-#    Updated: 2019/08/06 23:54:50 by ggregoir         ###   ########.fr        #
+#    Updated: 2019/09/01 15:30:58 by ggregoir         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,8 +18,6 @@ CFLAGS			=	-Wall -Werror -Wextra -g -D PATH=\"$(PATH_PROJECT)\"
 
 ifeq ($(DEBUG), yes)
 	CFLAGS	+=	-g -D DEBUG -fsanitize=address
-else
-	CFLAGS	+=	-Ofast
 endif
 
 SRCS		=	main.c functions_str.c get_next_line.c error.c parsing.c \

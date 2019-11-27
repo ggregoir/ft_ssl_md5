@@ -6,7 +6,7 @@
 /*   By: ggregoir <ggregoir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/05 23:14:36 by ggregoir          #+#    #+#             */
-/*   Updated: 2019/11/21 18:31:12 by ggregoir         ###   ########.fr       */
+/*   Updated: 2019/11/27 23:46:54 by ggregoir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,11 +68,12 @@ uint32_t	*init_msg(uint32_t *bitlen, uint32_t *newlen, uint32_t *len)
 void		prompt_sha256(char *to_hash, int8_t *flags)
 {
 	size_t len;
+
 	if (flags['p'])
 	{
 		flags['p'] = 0;
 		to_hash = read_fd(0, &len);
-		ft_printf("%s", to_hash);
+		write(1, to_hash, len);
 		print_sha256(to_hash, len);
 		write(1, "\n", 1);
 	}
